@@ -2,6 +2,7 @@ ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 create role GIANGVIEN;
 --drop role GIANGVIEN;
 grant NVCOBAN to GIANGVIEN;
+grant connect to GIANGVIEN;
 
 create or replace view ADMIN.UV_GIANGVIEN_PHANCONG
 as
