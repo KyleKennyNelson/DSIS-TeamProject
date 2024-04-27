@@ -60,3 +60,16 @@ BEGIN
         UPDATE_CHECK=> TRUE
     );
 END;
+
+declare
+    cursor cur_GIANGVIEN is (select * from ADMIN.PROJECT_NHANSU where VAITRO = 'GIANGVIEN');
+    STRSQL varchar2(1000);
+begin
+    for row_GIANGVIEN in cur_GIANGVIEN
+    loop
+        STRSQL := 'CREATE USER ' || row_GIANGVIEN.MANV || ' identified by 123';
+        EXECUTE IMMEDIATE (STRSQL);
+        STRSQL := 'GRANT GIANGVIEN to ' || row_GIANGVIEN.MANV;
+        EXECUTE IMMEDIATE (STRSQL);
+    end loop;
+end;
