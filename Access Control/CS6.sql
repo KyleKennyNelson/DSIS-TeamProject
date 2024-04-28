@@ -7,7 +7,7 @@ grant update (DIACHI,DT) on ADMIN.PROJECT_SINHVIEN to SINHVIEN;
 
 
 --run with SYSDBA privilege
-connect sys/123@localhost:15211 as SYSDBA;
+--connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_SINHVIEN_SEL_UPD(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
@@ -43,7 +43,7 @@ BEGIN
     );
 END;
 
-connect sys/123@localhost:15211 as SYSDBA;
+--connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_KHMO_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
@@ -87,7 +87,7 @@ BEGIN
     );
 END;
 
-connect sys/123@localhost:15211 as SYSDBA;
+--connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_HOCPHAN_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
@@ -152,7 +152,7 @@ BEGIN
     );
 END;
 
-connect sys/123@localhost:15211 as SYSDBA;
+--connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_DANGKI_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
@@ -187,7 +187,7 @@ BEGIN
     );
 END;
 
-connect sys/123@localhost:15211 as SYSDBA;
+--connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_DANGKI_INS_DEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
@@ -245,5 +245,21 @@ BEGIN
     );
 END;
 
+declare
+    cursor cur_SINHVIEN is (select * from ADMIN.PROJECT_SINHVIEN);
+    STRSQL varchar2(1000);
+    result boolean;
+begin
+    for row_SINHVIEN in cur_SINHVIEN
+    loop
+        result := isUserExists(row_SINHVIEN.MASV);
+        if(result = false) then
+            STRSQL := 'CREATE USER ' || row_SINHVIEN.MASV || ' identified by 123';
+            EXECUTE IMMEDIATE (STRSQL);
+        end if;
+        STRSQL := 'GRANT SINHVIEN to ' || row_SINHVIEN.MASV;
+        EXECUTE IMMEDIATE (STRSQL);
+    end loop;
+end;
 --connect sys/123@localhost:15211 as SYSDBA;
 --revoke SINHVIEN from ADMIN CONTAINER = ALL;
