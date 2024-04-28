@@ -1,0 +1,70 @@
+﻿<Window x:Class="AdminMonitor.NVCOBAN.NVCoBanScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="NVCoBanScreen" Height="450" Width="800" 
+        Loaded="NVCoBanScreen_Loaded" Closed="NVCoBanScreen_Closed"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="65"/>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Welcome Employee!" FontSize="18" HorizontalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap"
+                       HorizontalAlignment="Center" TextAlignment="Center">
+                This is the window where you can manage
+                <LineBreak/>
+                your information and see the data of students
+            </TextBlock>
+        </StackPanel>
+
+        <DataGrid Name="dataGridViewEmpInfor" Grid.Row="1"
+                  AutoGenerateColumns="True" SelectionMode="Single">
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <EventSetter Event="MouseDoubleClick"  Handler="ChangePhoneNumbContextItem_Click"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Change PhoneNumber"
+                              Click="ChangePhoneNumbContextItem_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" VerticalAlignment="Center" Orientation="Horizontal">
+            <RadioButton x:Name="ViewSinhVienRadioButton" Content="View SinhVien" 
+                         Checked="getSinhVienButton_Click"/>
+            <RadioButton x:Name="ViewDonViRadioButton" Content="View DonVi"
+                         Checked="getDonViButton_Click" Margin="10,0,0,0"/>
+            <RadioButton x:Name="ViewHocPhanRadioButton" Content="View HocPhan"
+                         Checked="getHocPhanButton_Click" Margin="10,0,0,0"/>
+            <RadioButton x:Name="ViewKHMoRadioButton" Content="View KHMo"
+                         Checked="getKHMoButton_Click" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" >
+            <TextBlock Text="Displaying " VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <ComboBox x:Name="rowPerPageOptionsComboBox" Width="65" VerticalContentAlignment="Center" 
+                      SelectionChanged="rowPerPageOptionsComboBox_SelectionChanged"/>
+            <TextBlock x:Name="TotalItemDisplayTextBox" d:Text=" of 9999 Item(s)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <DataGrid Name="dataGridView" Grid.Row="3" AutoGenerateColumns="True" 
+                  FrozenColumnCount="2" SelectionMode="Single"/>
+
+        <StackPanel Grid.Row="4" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button x:Name="PrevButton" Content="Prev" Click="PrevButton_Click" Height="20" Width="40"/>
+            <TextBlock VerticalAlignment="Center" Name="PageCountTextBox" d:Text="0/0"/>
+            <Button x:Name="NextButton" Content="Next" Click="NextButton_Click" Height="20" Width="40"/>
+        </StackPanel>
+    </Grid>
+</Window>
