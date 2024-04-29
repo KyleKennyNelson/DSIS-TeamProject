@@ -12,49 +12,47 @@ namespace AdminMonitor
         public MainWindow()
         {
             InitializeComponent();
-            LoginScreen loginScreen = new LoginScreen();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoginScreen loginScreen = new();
             this.Hide();
             var result = loginScreen.ShowDialog();
-            var con = loginScreen._connection;
-            var role = loginScreen._role;
-            if (role == "DBA")
-            {
-                AdminScreen AdminScreen = new AdminScreen(con);
-                if (result == true)
-                {
-                    AdminScreen.Show();
-                }
-                else
-                {
-                    AdminScreen.Close();
-                    return;
-                }
+            if (result == false) { 
+                Close();
             }
-            else if (role == "NVCOBAN")
+            else
             {
-                NVCoBanScreen nVCoBanScreen = new NVCoBanScreen(con);
-                if (result == true)
+                var con = loginScreen._connection;
+                var role = loginScreen._role;
+                Window? window = null;
+                if (con != null)
                 {
-                    nVCoBanScreen.Show();
+                    switch (role)
+                    {
+                        case "SYSDBA":
+                            window = new AdminScreen(con);
+                            break;
+                        case "NVCOBAN":
+                            window = new NVCoBanScreen(con);
+                            break;
+                        case "GIANGVIEN":
+                            break;
+                        case "GIAOVU":
+                            break;
+                        case "TRGKHOA":
+                            break;
+                        case "TRGDONVI":
+                            break;
+                        case "SINHVIEN":
+                            break;
+                        default: break;
+                    }
+                    
+                    window?.ShowDialog();
+                    Close();
                 }
-                else
-                {
-                    nVCoBanScreen.Close();
-                    return;
-                }
-            }
-            else if (role == "GIANGVIEN")
-            {
-                //NVCoBanScreen nVCoBanScreen = new NVCoBanScreen(con);
-                //if (result == true)
-                //{
-                //    nVCoBanScreen.Show();
-                //}
-                //else
-                //{
-                //    nVCoBanScreen.Close();
-                //    return;
-                //}
             }
         }
     }

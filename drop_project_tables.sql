@@ -6,26 +6,6 @@ drop table ADMIN.PROJECT_KHMO;
 drop table ADMIN.PROJECT_HOCPHAN;
 drop table ADMIN.PROJECT_DONVI;
 
-CREATE OR REPLACE FUNCTION ADMIN.isUserExists(pv_user IN varchar2)
-return BOOLEAN
-IS
-ld_dummy date;
-CURSOR lcur_usr_xsts IS
-SELECT created FROM all_users
-WHERE username = upper(pv_user);
-BEGIN
-    OPEN lcur_usr_xsts;
-    FETCH lcur_usr_xsts INTO ld_dummy;
-    IF lcur_usr_xsts%NOTFOUND THEN
---do_something;
-        CLOSE lcur_usr_xsts;
-        return FALSE;
-    ELSE
-        CLOSE lcur_usr_xsts;
-        return TRUE;
-    END IF;
-END;
-
 declare
     cursor cur_NHANSU is (select * from ADMIN.PROJECT_NHANSU);
     STRSQL varchar2(1000);

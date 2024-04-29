@@ -127,6 +127,8 @@ TRUNCATE TABLE ADMIN.PROJECT_THONGBAO;
     insert into ADMIN.PROJECT_THONGBAO(ID_TB,NOIDUNG,REGION_LABEL) values ('TB032','thong bao danh cho tat ca nhan vien CS2',CHAR_TO_LABEL('REGION_POLICY','L2::CS2'));
 COMMIT;
 
+EXECUTE    SA_USER_ADMIN.SET_USER_LABELS('region_policy','ADMIN',max_read_label=>'L6:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:TT');
+EXECUTE    SA_USER_ADMIN.SET_USER_LABELS('region_policy','ADMIN_OLS',max_read_label=>'L6:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:TT');
 grant select on ADMIN.PROJECT_THONGBAO to PUBLIC;
 
 --  a) gan nhan cho truong khoa

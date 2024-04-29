@@ -4,6 +4,26 @@
 --grant SYSDBA to ADMIN;
 --grant DBA to ADMIN;
 
+CREATE OR REPLACE FUNCTION ADMIN.isUserExists(pv_user IN varchar2)
+return BOOLEAN
+IS
+ld_dummy date;
+CURSOR lcur_usr_xsts IS
+SELECT created FROM all_users
+WHERE username = upper(pv_user);
+BEGIN
+    OPEN lcur_usr_xsts;
+    FETCH lcur_usr_xsts INTO ld_dummy;
+    IF lcur_usr_xsts%NOTFOUND THEN
+--do_something;
+        CLOSE lcur_usr_xsts;
+        return FALSE;
+    ELSE
+        CLOSE lcur_usr_xsts;
+        return TRUE;
+    END IF;
+END;
+
 --Drop PDB incase you need
 alter pluggable database user_pdb close immediate instances=all;
 alter session set container=CDB$ROOT;
