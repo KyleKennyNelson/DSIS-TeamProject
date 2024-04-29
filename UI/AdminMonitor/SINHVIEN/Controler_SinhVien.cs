@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AdminMonitor.SINHVIEN
 {
-    internal class Controler_SinhVien
+    internal class Controller_SinhVien
     {
         static public SinhVien? GetSinhVien(OracleConnection Conn, string MASV)
         {

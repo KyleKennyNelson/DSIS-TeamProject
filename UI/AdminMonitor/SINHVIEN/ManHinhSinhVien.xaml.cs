@@ -29,9 +29,10 @@ namespace AdminMonitor.SINHVIEN
 
             var tabItems = new ObservableCollection<TabItem>() { 
                 new TabItem(){Header = "Thông tin SV", Content = new TTSinhVienUserControl(Conn,MaSV) },
-                new TabItem(){Header = "DS HP đăng kí"},
-                new TabItem(){Header = "DS Học phần"},
-                new TabItem(){Header = "Kế hoạch mở môn"},
+                new TabItem(){Header = "DS HP đăng kí", Content = new ManHinhDangKi(Conn,MaSV) },
+                new TabItem(){Header = "DS Học phần", Content = new XemDSHocPhanUserControl(Conn)},
+                new TabItem(){Header = "Kế hoạch mở môn", Content = new XemDSKHMOUserControl(Conn)},
+                new TabItem(){Header = "Thông báo", Content = new ManHinhThongBaoUserControl(Conn)},
             };
 
             MainTabControl.ItemsSource = tabItems;

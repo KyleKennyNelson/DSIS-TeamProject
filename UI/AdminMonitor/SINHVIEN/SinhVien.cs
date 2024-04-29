@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AdminMonitor.SINHVIEN
 {
-    public class SinhVien : INotifyPropertyChanged
+    internal class SinhVien : INotifyPropertyChanged
     {
         public required string MASV { get; set; }
         public string? HoTen { get; set; }

@@ -28,7 +28,7 @@ begin
         return '';
     end if;
 end;
-
+/
 
 
 BEGIN
@@ -42,7 +42,7 @@ BEGIN
         UPDATE_CHECK=> TRUE
     );
 END;
-
+/
 --connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_KHMO_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
@@ -73,7 +73,7 @@ begin
         return '';
     end if;
 end;
-
+/
 grant select on ADMIN.PROJECT_KHMO to SINHVIEN;
 
 BEGIN
@@ -86,7 +86,7 @@ BEGIN
         STATEMENT_TYPES=>'SELECT'
     );
 END;
-
+/
 --connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_HOCPHAN_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
@@ -130,7 +130,7 @@ begin
         return '';
     end if;
 end;
-
+/
 grant select on ADMIN.PROJECT_HOCPHAN to SINHVIEN;
 
 begin
@@ -151,7 +151,7 @@ BEGIN
         STATEMENT_TYPES=>'SELECT'
     );
 END;
-
+/
 --connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_DANGKI_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
@@ -186,7 +186,7 @@ BEGIN
         STATEMENT_TYPES=>'SELECT'
     );
 END;
-
+/
 --connect sys/123@localhost:15211 as SYSDBA;
 create or replace function sys.SEC_SINHVIEN_DANGKI_INS_DEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
@@ -223,8 +223,8 @@ begin
         ngayBatDauHocKi := TO_DATE(ngayBatDauHocKi_str,'YYYY-MM-DD');
         
         
-        return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (sysdate - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
-        --return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'') - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
+        --return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (sysdate - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
+        return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'') - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
     else
         return '';
     end if;
@@ -244,6 +244,48 @@ BEGIN
         UPDATE_CHECK => TRUE
     );
 END;
+/
+create or replace function sys.SEC_SINHVIEN_PHANCONG_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
+RETURN VARCHAR2
+AS
+    cursor cur_SINHVIEN is  (
+                                select MACT
+                                from ADMIN.PROJECT_SINHVIEN
+                                where MASV = SYS_CONTEXT('USERENV','SESSION_USER')
+                            );
+    cursor cur is   (
+                        select GRANTED_ROLE 
+                        from sys.DBA_ROLE_PRIVS 
+                        where GRANTEE = SYS_CONTEXT('USERENV','SESSION_USER') and GRANTED_ROLE = 'SINHVIEN'
+                    );
+    MACT varchar2(10);
+    vaitro varchar(40);
+begin
+    open cur;
+    fetch cur into vaitro;
+    if (cur%FOUND) then
+        close cur;
+        open cur_SINHVIEN;
+        fetch cur_SINHVIEN into MACT;
+        return 'MACT = ''' || MACT || '''';
+    else
+        close cur;
+        return '';
+    end if;
+end;
+/
+grant select on ADMIN.PROJECT_PHANCONG to SINHVIEN;
+BEGIN
+    dbms_rls.add_policy(
+        OBJECT_SCHEMA =>'ADMIN',
+        OBJECT_NAME=>'PROJECT_PHANCONG',
+        POLICY_NAME =>'SINHVIEN_PHANCONG_SEL',
+        FUNCTION_SCHEMA => 'sys',
+        POLICY_FUNCTION=>'SEC_SINHVIEN_PHANCONG_SEL',
+        STATEMENT_TYPES=>'SELECT'
+    );
+END;
+/
 
 declare
     cursor cur_SINHVIEN is (select * from ADMIN.PROJECT_SINHVIEN);

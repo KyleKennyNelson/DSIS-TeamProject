@@ -1,0 +1,45 @@
+﻿<Window x:Class="AdminMonitor.SINHVIEN.ThemDangKiWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminMonitor.SINHVIEN"
+        mc:Ignorable="d"
+        Title="Đăng kí học phần" Height="450" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Chọn các học phần bạn muốn đăng kí!" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="19"/>
+
+        <DataGrid x:Name="MainDataGrid" Grid.Row="1" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã học phần" Binding="{Binding Phancong.MaHP}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Mã giảng viên" Binding="{Binding Phancong.MaGV}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Học kì" Binding="{Binding Phancong.HK}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Năm học" Binding="{Binding Phancong.Nam}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Mã chương trình" Binding="{Binding Phancong.MaCT}" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Header="Chọn" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="CancelButton" Content="Huỷ" Width="50" Height="30" Click="CancelButton_Click"/>
+            <Button x:Name="ConfirmButton" Content="Đăng kí" Width="50" Height="30" Grid.Column="1" Click="ConfirmButton_Click"/>
+        </Grid>
+
+        <StatusBar Grid.Row="3">
+            <StatusBarItem>
+                <ProgressBar x:Name="loadingProgressBar" Height="20" Width="150" IsIndeterminate="True"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
