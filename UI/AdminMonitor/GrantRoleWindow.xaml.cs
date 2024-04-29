@@ -74,7 +74,11 @@ namespace AdminMonitor
                 __RoleDT.Load(datareader);
                 if (totalItems == -1 && __RoleDT.Rows.Count > 0)
                 {
-                    totalItems = int.Parse(__RoleDT.Rows[0]["TotalItems"].ToString());
+                    if(__RoleDT.Rows[0] != null)
+                    {
+                        totalItems = int.Parse(__RoleDT.Rows[0]["TotalItems"].ToString());
+                    }
+                    
                     totalPages = (totalItems / rowsPerPage);
                     if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
                     else totalPages = (int)(totalItems / rowsPerPage) + 1;
@@ -144,8 +148,13 @@ namespace AdminMonitor
 
         private void GrantRoleWithOption_Click(object sender, RoutedEventArgs e)
         {
-            DataRowView row = (DataRowView)dataGridView.SelectedItems[0];
-            string rolename = (string)row.Row.ItemArray[0];
+            DataRowView? row = dataGridView.SelectedItems[0] as DataRowView;
+            string? rolename = null;
+            if (row != null)
+            {
+                rolename = (string?)row.Row.ItemArray[0];
+            }
+            
             string adminOption = "WITH ADMIN OPTION";
 
             OracleCommand query = _con.CreateCommand();

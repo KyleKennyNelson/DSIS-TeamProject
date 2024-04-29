@@ -36,14 +36,17 @@ namespace AdminMonitor
         ];
 
         public string? _role;
+        public string? username;
         void Encrypt(string password, string username)
         {
             var passwordInBytes = Encoding.UTF8.GetBytes(password);
             var entropy = new byte[20];
-            using (var rng = new RNGCryptoServiceProvider())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(entropy);
             }
+
+
 
             var cypherText = ProtectedData.Protect(passwordInBytes, entropy, DataProtectionScope.CurrentUser);
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -67,7 +70,7 @@ namespace AdminMonitor
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             string password = PasswordBox.Password;
-            string username = UsernameTextBox.Text;
+            username = UsernameTextBox.Text;
             string server = DataSourceTextBox.Text;
             string privilege = selectedRole.ConnectAs;
 
@@ -93,8 +96,6 @@ namespace AdminMonitor
             {
                 MessageBox.Show( "Logged in successfully!", "Success", MessageBoxButton.OK);
 
-                _role = selectedRole.RoleName;
-
                 if (RemembermeCheckBox.IsChecked == true)
                 {
                     Encrypt(password, username);
@@ -115,6 +116,7 @@ namespace AdminMonitor
             {
                 MessageBox.Show("Wrong credential!", "Log in failed", MessageBoxButton.OK);
             }
+            _role = selectedRole.RoleName;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

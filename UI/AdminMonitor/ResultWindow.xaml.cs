@@ -24,14 +24,14 @@ namespace AdminMonitor
     public partial class ResultWindow : Window
     {
         string DisplayMode = "";
-        string name = string.Empty;
-        string rolename = string.Empty;
-        string operation = string.Empty;
-        string tableOwner = string.Empty;
-        string tableName = string.Empty;
-        string columnList = string.Empty;
+        string? name = string.Empty;
+        string? rolename = string.Empty;
+        string? operation = string.Empty;
+        string? tableOwner = string.Empty;
+        string? tableName = string.Empty;
+        string? columnList = string.Empty;
         OracleConnection _con;
-        DataTable table;
+        DataTable? table;
         public ResultWindow(OracleConnection con,string operation, string tableOwner,string table,string schema, string columnList)
         {
             InitializeComponent();
@@ -50,7 +50,7 @@ namespace AdminMonitor
             this.name = schema;
             this.columnList = columnList;
         }
-        public ResultWindow(OracleConnection con,string username, string rolename)
+        public ResultWindow(OracleConnection con,string username, string? rolename)
         {
             InitializeComponent();
 
@@ -58,7 +58,10 @@ namespace AdminMonitor
 
             _con = con;
             this.name =username;
-            this.rolename = rolename;
+            if(rolename != null)
+            {
+                this.rolename = rolename;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

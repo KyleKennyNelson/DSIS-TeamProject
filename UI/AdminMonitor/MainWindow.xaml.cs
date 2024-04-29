@@ -1,4 +1,5 @@
 ﻿using AdminMonitor.NVCOBAN;
+using AdminMonitor.SINHVIEN;
 using System.Windows;
 
 
@@ -26,6 +27,7 @@ namespace AdminMonitor
             {
                 var con = loginScreen._connection;
                 var role = loginScreen._role;
+                var username = loginScreen.username;
                 Window? window = null;
                 if (con != null)
                 {
@@ -46,6 +48,10 @@ namespace AdminMonitor
                         case "TRGDONVI":
                             break;
                         case "SINHVIEN":
+                            if(username != null)
+                            {
+                                window = new ManHinhSinhVien(con, username);
+                            }
                             break;
                         default: break;
                     }
