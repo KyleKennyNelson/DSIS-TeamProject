@@ -5,8 +5,44 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AdminMonitor.SINHVIEN"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded" d:Background="White">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Button x:Name="DangKiButton" Content="Đăng kí" Width="50" Height="30" Click="DangKiButton_Click"/>
+
+        <DataGrid x:Name="DangKiDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã giáo viên" Binding="{Binding MaGV}"/>
+                <DataGridTextColumn Header="Mã học phần" Binding="{Binding MaHP}"/>
+                <DataGridTextColumn Header="Học kì" Binding="{Binding HK}"/>
+                <DataGridTextColumn Header="Năm" Binding="{Binding Nam}"/>
+                <DataGridTextColumn Header="Mã chương trình" Binding="{Binding MaCT}"/>
+                <DataGridTextColumn Header="Điểm thực hành" Binding="{Binding DiemTH}"/>
+                <DataGridTextColumn Header="Điểm quá trình" Binding="{Binding DiemQT}"/>
+                <DataGridTextColumn Header="Điểm cuối kì" Binding="{Binding DiemCK}"/>
+                <DataGridTextColumn Header="Điểm tổng kết" Binding="{Binding DiemTK}"/>
+            </DataGrid.Columns>
+            <DataGrid.Resources>
+                <ContextMenu x:Key="RightClickMenu">
+                    <MenuItem Header="Delete" x:Name="DeleteMenuItem" Click="DeleteMenuItem_Click"/>
+                </ContextMenu>
+            </DataGrid.Resources>
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="{x:Type DataGridRow}" >
+                    <Setter Property="ContextMenu" Value="{StaticResource RightClickMenu}" />
+                </Style>
+            </DataGrid.ItemContainerStyle>
+        </DataGrid>
+
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <ProgressBar x:Name="loadingProgressBar" Height="20" Width="150" IsIndeterminate="True"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </UserControl>

@@ -41,7 +41,7 @@ namespace AdminMonitor.SINHVIEN
             loadingBar.Value = 40;
             if(_TTSinhVien != null && _TTSinhVien.MASV != null && _TTSinhVien.SDT != null && _TTSinhVien.DiaChi != null)
             {
-                await Task.Run(() => Controler_SinhVien.UpdateSinhVien(Conn, _TTSinhVien.MASV, _TTSinhVien.SDT, _TTSinhVien.DiaChi));
+                await Task.Run(() => Controller_SinhVien.UpdateSinhVien(Conn, _TTSinhVien.MASV, _TTSinhVien.SDT, _TTSinhVien.DiaChi));
             }
             await Task.Run(() => Thread.Sleep(25));
             loadingBar.Value = 80;
@@ -64,7 +64,7 @@ namespace AdminMonitor.SINHVIEN
             if(_TTSinhVien != null && _TTSinhVien.MASV != null)
             {
                 SinhVien? data = null;
-                await Task.Run(() => data = Controler_SinhVien.GetSinhVien(Conn, _TTSinhVien.MASV));
+                await Task.Run(() => data = Controller_SinhVien.GetSinhVien(Conn, _TTSinhVien.MASV));
                 _TTSinhVien = data;
             }
             
