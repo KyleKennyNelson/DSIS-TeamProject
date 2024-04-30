@@ -1,7 +1,5 @@
 ﻿using AdminMonitor.NVCOBAN;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -13,20 +11,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AdminMonitor.GIAOVIEN
+namespace AdminMonitor.UserControls
 {
     /// <summary>
-    /// Interaction logic for GiaoVienScreen.xaml
+    /// Interaction logic for NVUserControl.xaml
     /// </summary>
-    public partial class GiaoVienScreen : Window
+    public partial class NVUserControl : UserControl
     {
+        public NVUserControl(OracleConnection connectionstring)
+        {
+            InitializeComponent();
+            con = connectionstring;
+        }
+
         public OracleConnection con;
         DataTable empDT;
-        DataTable pcDT;
-
-
         string DisplayMode = "";
 
 
@@ -44,11 +46,6 @@ namespace AdminMonitor.GIAOVIEN
         int _currentPage = 1;
         int totalPages = -1;
         int totalItems = -1;
-        public GiaoVienScreen(OracleConnection connectionstring)
-        {
-            InitializeComponent();
-            con = connectionstring;
-        }
 
         private void GetEmpInfor()
         {
@@ -74,34 +71,7 @@ namespace AdminMonitor.GIAOVIEN
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
-            }
-        }
-
-        private void GetPHANCONGInfor()
-        {
-            try
-            {
-
-                OracleCommand query = con.CreateCommand();
-                query.CommandText = """
-                                       SELECT MAHP, HK, NAM, MACT
-                                       FROM admin.UV_GIANGVIEN_PHANCONG
-                                    """;
-
-
-                query.CommandType = CommandType.Text;
-                OracleDataReader datareader = query.ExecuteReader();
-
-                pcDT = new DataTable();
-                pcDT.Load(datareader);
-
-                dataGridViewPHANCONGInfor.ItemsSource = pcDT.AsDataView();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                //this.Close();
             }
         }
 
@@ -109,9 +79,10 @@ namespace AdminMonitor.GIAOVIEN
         {
             EditPhoneNumber screen = new EditPhoneNumber(con, _name);
             screen.ShowDialog();
+            GetEmpInfor();
         }
 
-        private void GiaoVienScreen_Closed(object sender, EventArgs e)
+        private void NVCoBanScreen_Closed(object sender, EventArgs e)
         {
             if (con != null)
             {
@@ -119,104 +90,12 @@ namespace AdminMonitor.GIAOVIEN
             }
         }
 
-        private void GiaoVienScreen_Loaded(object sender, RoutedEventArgs e)
+        private void NVCoBanScreen_Loaded(object sender, RoutedEventArgs e)
         {
             GetEmpInfor();
-            GetPHANCONGInfor();
-            MAGVLabel.Content= _name;
             rowPerPageOptionsComboBox.ItemsSource = rowPerPageOptions;
             rowPerPageOptionsComboBox.SelectedIndex = 1;
-            ViewDangKyRadioButton.IsChecked = true;
-        }
-
-        private void GetDangKy(int page, int rowsPerPage)
-        {
-            try
-            {
-                int skip = (page - 1) * rowsPerPage;
-                int take = rowsPerPage;
-
-                OracleCommand query = con.CreateCommand();
-                query.CommandText = """
-                                        SELECT MASV, MAHP, HK, NAM, MACT, DIEMTH, DIEMQT, 
-                                        DIEMCK, DIEMTK, count(*) over() as "TotalSinhVien"
-                                        FROM admin.PROJECT_DANGKI
-                                        order by MASV
-                                        offset :Skip rows 
-                                        fetch next :Take rows only
-                                    """;
-
-
-                query.CommandType = CommandType.Text;
-                query.Parameters.Add(new OracleParameter("Skip", skip));
-                query.Parameters.Add(new OracleParameter("Take", take));
-
-
-                OracleDataReader datareader = query.ExecuteReader();
-                svDT = new DataTable();
-                svDT.Load(datareader);
-                if (totalItems == -1 && svDT.Rows.Count > 0)
-                {
-                    totalItems = int.Parse(svDT.Rows[0]["TotalSinhVien"].ToString());
-                    totalPages = (totalItems / rowsPerPage);
-                    if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
-                    else totalPages = (int)(totalItems / rowsPerPage) + 1;
-                }
-
-
-                svDT.Columns.Remove("TotalSinhVien");
-                dataGridView.ItemsSource = svDT.DefaultView;
-                DisplayMode = "DangKy";
-
-                PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";
-                TotalItemDisplayTextBox.Text = $" of {totalItems} item(s).";
-
-                if (_currentPage == totalPages)
-                {
-                    NextButton.IsEnabled = false;
-                }
-                else
-                {
-                    NextButton.IsEnabled = true;
-                }
-
-                if (_currentPage == 1)
-                {
-                    PrevButton.IsEnabled = false;
-                }
-                else
-                {
-                    PrevButton.IsEnabled = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
-            }
-        }
-
-        private void getDangKyButton_Click(object sender, RoutedEventArgs e)
-        {
-            _currentPage = 1;
-            totalItems = -1;
-            GetDangKy(_currentPage, _rowsPerPage);
-        }
-
-        private void CapNhatDuLieuSinhVien_Click(object sender, RoutedEventArgs e)
-        {
-            DataRowView row = (DataRowView)dataGridView.SelectedItems[0];
-            string MSSV = (string)row.Row.ItemArray[0];
-
-            decimal DTH = (decimal)row.Row.ItemArray[5];
-            decimal DQT = (decimal)row.Row.ItemArray[6];
-            decimal DCK = (decimal)row.Row.ItemArray[7];
-            decimal DTK = (decimal)row.Row.ItemArray[8];
-            CapNhatDuLieuSinhVienScreen screen = new(con, MSSV, DTH, DQT, DCK, DTK);
-            this.Hide();
-            screen.ShowDialog();
-            GetDangKy(_currentPage, _rowsPerPage);
-            this.Show();
+            ViewSinhVienRadioButton.IsChecked = true;
         }
 
         private void GetSinhVien(int page, int rowsPerPage)
@@ -282,7 +161,7 @@ namespace AdminMonitor.GIAOVIEN
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                //this.Close();
             }
         }
 
@@ -291,7 +170,6 @@ namespace AdminMonitor.GIAOVIEN
             _currentPage = 1;
             totalItems = -1;
             GetSinhVien(_currentPage, _rowsPerPage);
-            CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
         }
 
         private void GetDonVi(int page, int rowsPerPage)
@@ -357,7 +235,7 @@ namespace AdminMonitor.GIAOVIEN
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                //this.Close();
             }
         }
 
@@ -366,7 +244,6 @@ namespace AdminMonitor.GIAOVIEN
             _currentPage = 1;
             totalItems = -1;
             GetDonVi(_currentPage, _rowsPerPage);
-            CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
         }
 
         private void GetHocPhan(int page, int rowsPerPage)
@@ -432,7 +309,7 @@ namespace AdminMonitor.GIAOVIEN
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                //this.Close();
             }
         }
 
@@ -441,7 +318,6 @@ namespace AdminMonitor.GIAOVIEN
             _currentPage = 1;
             totalItems = -1;
             GetHocPhan(_currentPage, _rowsPerPage);
-            CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
         }
 
         private void GetKHMo(int page, int rowsPerPage)
@@ -507,7 +383,7 @@ namespace AdminMonitor.GIAOVIEN
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
+                //this.Close();
             }
         }
 
@@ -516,7 +392,6 @@ namespace AdminMonitor.GIAOVIEN
             _currentPage = 1;
             totalItems = -1;
             GetKHMo(_currentPage, _rowsPerPage);
-            CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
         }
 
         private void rowPerPageOptionsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -526,10 +401,6 @@ namespace AdminMonitor.GIAOVIEN
 
             if (totalItems != -1)
             {
-                if (DisplayMode == "DangKy")
-                {
-                    getDangKyButton_Click(sender, e);
-                }
                 if (DisplayMode == "SinhVien")
                 {
                     getSinhVienButton_Click(sender, e);
@@ -554,10 +425,6 @@ namespace AdminMonitor.GIAOVIEN
             if (_currentPage > 1)
             {
                 _currentPage--;
-                if (DisplayMode == "DangKy")
-                {
-                    GetDangKy(_currentPage, _rowsPerPage);
-                }
                 if (DisplayMode == "SinhVien")
                 {
                     GetSinhVien(_currentPage, _rowsPerPage);
@@ -582,10 +449,6 @@ namespace AdminMonitor.GIAOVIEN
             if (_currentPage < totalPages)
             {
                 _currentPage++;
-                if (DisplayMode == "DangKy")
-                {
-                    GetDangKy(_currentPage, _rowsPerPage);
-                }
                 if (DisplayMode == "SinhVien")
                 {
                     GetSinhVien(_currentPage, _rowsPerPage);

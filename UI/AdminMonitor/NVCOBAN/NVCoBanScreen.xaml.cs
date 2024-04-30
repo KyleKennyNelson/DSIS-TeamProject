@@ -67,6 +67,7 @@ namespace AdminMonitor.NVCOBAN
         {
             EditPhoneNumber screen = new EditPhoneNumber(con, _name);
             screen.ShowDialog();
+            GetEmpInfor();
         }
 
         private void NVCoBanScreen_Closed(object sender, EventArgs e)

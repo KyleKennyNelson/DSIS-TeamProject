@@ -39,21 +39,14 @@
                    VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
             
             
-            
-            <TextBox x:Name="DTHBox" Width="200" Grid.Row="1" Grid.Column="0"
-                     TextAlignment="Center" FontSize="15"/>
             <TextBox x:Name="NewDTHBox" Width="200" Grid.Row="1" Grid.Column="0"
-                     TextAlignment="Center" FontSize="15" Visibility="Hidden"/>
-            
-            
-            
-            
+                     TextAlignment="Center" FontSize="15" TextChanged="NewDTHBox_TextChanged"/>
             <TextBox x:Name="NewDQTBox" Width="200" Grid.Row="1" Grid.Column="1"
-                     TextAlignment="Center" FontSize="15"/>
+                     TextAlignment="Center" FontSize="15" TextChanged="NewDQTBox_TextChanged"/>
             <TextBox x:Name="NewDCKBox" Width="200" Grid.Row="1" Grid.Column="2"
-                     TextAlignment="Center" FontSize="15"/>
+                     TextAlignment="Center" FontSize="15" TextChanged="NewDCKBox_TextChanged"/>
             <TextBox x:Name="NewDTKBox" Width="200" Grid.Row="1" Grid.Column="3"
-                     TextAlignment="Center" FontSize="15"/>
+                     TextAlignment="Center" FontSize="15" TextChanged="NewDTKBox_TextChanged"/>
         </Grid>
 
         <Grid Grid.Row="2">

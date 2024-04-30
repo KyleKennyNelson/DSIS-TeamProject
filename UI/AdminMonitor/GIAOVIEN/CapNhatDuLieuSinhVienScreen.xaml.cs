@@ -9,15 +9,21 @@ namespace AdminMonitor.GIAOVIEN
     /// <summary>
     /// Interaction logic for CapNhatDuLieuSinhVienScreen.xaml
     /// </summary>
+    ///
     public partial class CapNhatDuLieuSinhVienScreen : Window
     {
         OracleConnection _Conn;
         private string _MSSV;
 
-        private decimal _DTH;
-        private decimal _DQT;
-        private decimal _DCK;
-        private decimal _DTK;
+        private decimal _DTHshow;
+        private decimal _DQTshow;
+        private decimal _DCKshow;
+        private decimal _DTKshow;
+
+        private float _newDTH;
+        private float _newDQT;
+        private float _newDCK;
+        private float _newDTK;
         public CapNhatDuLieuSinhVienScreen(OracleConnection connection, string MSSV, decimal DTH,
                                                             decimal DQT, decimal DCK, decimal DTK)
         {
@@ -25,10 +31,10 @@ namespace AdminMonitor.GIAOVIEN
             _Conn = connection;
             _MSSV = MSSV;
 
-            _DTH = DTH;
-            _DQT = DQT;
-            _DCK = DCK;
-            _DTK = DTK;
+            _DTHshow = DTH;
+            _DQTshow = DQT;
+            _DCKshow = DCK;
+            _DTKshow = DTK;
     }
 
         private async void CapNhatDuLieuSinhVienScreen_Loaded(object sender, RoutedEventArgs e)
@@ -43,10 +49,10 @@ namespace AdminMonitor.GIAOVIEN
 
             if (_MSSV != null)
             {
-                DTHBox.Text = _DTH.ToString();
-                NewDQTBox.Text = _DQT.ToString();
-                NewDCKBox.Text = _DCK.ToString();
-                NewDTKBox.Text = _DTK.ToString();
+                NewDTHBox.Text = _DTHshow.ToString();
+                NewDQTBox.Text = _DQTshow.ToString();
+                NewDCKBox.Text = _DCKshow.ToString();
+                NewDTKBox.Text = _DTKshow.ToString();
             }
 
             await Task.Run(() => Thread.Sleep(25));
@@ -62,6 +68,105 @@ namespace AdminMonitor.GIAOVIEN
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void NewDTHBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(NewDTHBox.Text != "")
+                {
+                    _newDTH = float.Parse(NewDTHBox.Text);
+                    if (_newDTH < 0 || _newDTH > 10)
+                    {
+                        _newDTH = (float)_DTHshow;
+                        MessageBox.Show("the score have to be in range (0, 10)", "Error");
+                    }
+                }
+                else
+                {
+                    _newDTH = (float)_DTHshow;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private void NewDQTBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (NewDQTBox.Text != "")
+                {
+                    _newDQT = float.Parse(NewDQTBox.Text);
+                    if (_newDQT < 0 || _newDQT > 10)
+                    {
+                        _newDQT = (float)_DQTshow;
+                        MessageBox.Show("the score have to be in range (0, 10)", "Error");
+                    }
+                }
+                else
+                {
+                    _newDQT = (float)_DQTshow;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+        private void NewDCKBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (NewDCKBox.Text != "")
+                {
+                    _newDCK = float.Parse(NewDCKBox.Text);
+                    if (_newDCK < 0 || _newDCK > 10)
+                    {
+                        _newDCK = (float)_DCKshow;
+                        MessageBox.Show("the score have to be in range (0, 10)", "Error");
+                    }
+                }
+                else
+                {
+                    _newDCK = (float)_DCKshow;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+        }
+        private void NewDTKBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (NewDCKBox.Text != "")
+                {
+                    _newDTK = float.Parse(NewDTKBox.Text);
+                    if (_newDTK < 0 || _newDTK > 10)
+                    {
+                        _newDTK = (float)_DTKshow;
+                        MessageBox.Show("the score have to be in range (0, 10)", "Error");
+                    }
+                }
+                else
+                {
+                    _newDTK = (float)_DTKshow;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
@@ -80,24 +185,22 @@ namespace AdminMonitor.GIAOVIEN
                 {
                     if (_MSSV != null)
                     {
-                        //if(NewDTHBox.Text != _DTH.ToString())
-                        //{
-                            if (_Conn.State == ConnectionState.Closed)
-                            {
-                                _Conn.Open();
-                            }
+                        if (_Conn.State == ConnectionState.Closed)
+                        {
+                            _Conn.Open();
+                        }
+                        if (_newDTH != ((float)_DTHshow))
+                        {
                             OracleCommand query = _Conn.CreateCommand();
                             query.BindByName = true;
                             query.CommandText = """
-                                                   UPDATE admin.PROJECT_DANGKI
-                                                   SET DIEMTH = '7'
-                                                   WHERE MASV = 'SV015'
+                                                    UPDATE admin.PROJECT_DANGKI
+                                                    SET DIEMTH = :diemTH
+                                                    WHERE MASV = :mssv
                                                  """;
                             query.CommandType = CommandType.Text;
-
-                            string diemTH = "7";
-                            query.Parameters.Add(new OracleParameter("diemTH", diemTH));
-                            //query.Parameters.Add(new OracleParameter("mssv", _MSSV));
+                            query.Parameters.Add(new OracleParameter(":diemTH", _newDTH));
+                            query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
 
                             try
                             {
@@ -108,7 +211,79 @@ namespace AdminMonitor.GIAOVIEN
                                 MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
                                 return;
                             }
-                        //}
+                        }
+
+                        if (_newDQT != ((float)_DQTshow))
+                        {
+                            OracleCommand query = _Conn.CreateCommand();
+                            query.BindByName = true;
+                            query.CommandText = """
+                                                    UPDATE admin.PROJECT_DANGKI
+                                                    SET DIEMQT = :diemQT
+                                                    WHERE MASV = :mssv
+                                                 """;
+                            query.CommandType = CommandType.Text;
+                            query.Parameters.Add(new OracleParameter(":diemQT", _newDQT));
+                            query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
+
+                            try
+                            {
+                                query.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                        }
+
+                        if (_newDCK != ((float)_DCKshow))
+                        {
+                            OracleCommand query = _Conn.CreateCommand();
+                            query.BindByName = true;
+                            query.CommandText = """
+                                                    UPDATE admin.PROJECT_DANGKI
+                                                    SET DIEMCK = :diemCK
+                                                    WHERE MASV = :mssv
+                                                 """;
+                            query.CommandType = CommandType.Text;
+                            query.Parameters.Add(new OracleParameter(":diemCK", _newDCK));
+                            query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
+
+                            try
+                            {
+                                query.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                        }
+
+                        if (_newDTK != ((float)_DTKshow))
+                        {
+                            OracleCommand query = _Conn.CreateCommand();
+                            query.BindByName = true;
+                            query.CommandText = """
+                                                    UPDATE admin.PROJECT_DANGKI
+                                                    SET DIEMTK = :diemTK
+                                                    WHERE MASV = :mssv
+                                                 """;
+                            query.CommandType = CommandType.Text;
+                            query.Parameters.Add(new OracleParameter(":diemTK", _newDTK));
+                            query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
+
+                            try
+                            {
+                                query.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                        }
                     }
                 }
                 catch (Exception ex)
