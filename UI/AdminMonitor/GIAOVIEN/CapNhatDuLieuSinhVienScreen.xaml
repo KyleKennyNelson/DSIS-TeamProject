@@ -1,0 +1,76 @@
+﻿<Window x:Class="AdminMonitor.GIAOVIEN.CapNhatDuLieuSinhVienScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminMonitor.GIAOVIEN"
+        mc:Ignorable="d"
+        Title="CapNhatDuLieuSinhVienScreen" Height="250" Width="800"
+        Loaded="CapNhatDuLieuSinhVienScreen_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Label Name="LabellTitle" VerticalAlignment="Center" FontSize="19" HorizontalAlignment="Center"/>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+                
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Điểm thực hành" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            <Label Grid.Row="0" Grid.Column="1" Content="Điểm quá trình" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            <Label Grid.Row="0" Grid.Column="2" Content="Điểm cuối kỳ" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            <Label Grid.Row="0" Grid.Column="3" Content="Điểm tổng kết" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            
+            
+            
+            <TextBox x:Name="DTHBox" Width="200" Grid.Row="1" Grid.Column="0"
+                     TextAlignment="Center" FontSize="15"/>
+            <TextBox x:Name="NewDTHBox" Width="200" Grid.Row="1" Grid.Column="0"
+                     TextAlignment="Center" FontSize="15" Visibility="Hidden"/>
+            
+            
+            
+            
+            <TextBox x:Name="NewDQTBox" Width="200" Grid.Row="1" Grid.Column="1"
+                     TextAlignment="Center" FontSize="15"/>
+            <TextBox x:Name="NewDCKBox" Width="200" Grid.Row="1" Grid.Column="2"
+                     TextAlignment="Center" FontSize="15"/>
+            <TextBox x:Name="NewDTKBox" Width="200" Grid.Row="1" Grid.Column="3"
+                     TextAlignment="Center" FontSize="15"/>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="CancelButton" Content="Huỷ" Width="100" Height="30" 
+                    FontWeight="Bold" FontSize="15" Click="CancelButton_Click"/>
+            <Button x:Name="ConfirmButton" Content="Cập Nhật" Width="100" Height="30" Grid.Column="1" 
+                    FontWeight="Bold" FontSize="15" Click="ConfirmButton_Click"/>
+        </Grid>
+
+        <StatusBar Grid.Row="3">
+            <StatusBarItem>
+                <ProgressBar x:Name="loadingProgressBar" Height="20" Width="150" IsIndeterminate="True"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

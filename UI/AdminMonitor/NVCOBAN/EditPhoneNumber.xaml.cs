@@ -22,11 +22,12 @@ namespace AdminMonitor.NVCOBAN
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             OracleCommand query = _conn.CreateCommand();
-            query.CommandType = CommandType.Text;
             query.CommandText = """
                                     UPDATE admin.UV_SDT_NHANSU
                                     SET DT = phonenumber
                                 """;
+
+            query.CommandType = CommandType.Text;
 
             string phonenumber = NewPhoneNumberBox.Text;
             query.Parameters.Add(new OracleParameter("phonenumber", phonenumber));

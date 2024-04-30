@@ -1,5 +1,6 @@
 ﻿using AdminMonitor.NVCOBAN;
 using AdminMonitor.SINHVIEN;
+using AdminMonitor.GIAOVIEN;
 using System.Windows;
 
 
@@ -34,12 +35,22 @@ namespace AdminMonitor
                     switch (role)
                     {
                         case "SYSDBA":
-                            window = new AdminScreen(con);
+                            if (username != null)
+                            {
+                                window = new AdminScreen(con);
+                            }
                             break;
                         case "NVCOBAN":
-                            window = new NVCoBanScreen(con);
+                            if (username != null)
+                            {
+                                window = new NVCoBanScreen(con);
+                            }
                             break;
                         case "GIANGVIEN":
+                            if (username != null)
+                            {
+                                window = new GiaoVienScreen(con);
+                            }
                             break;
                         case "GIAOVU":
                             break;
