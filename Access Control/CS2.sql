@@ -14,7 +14,7 @@ grant select on ADMIN.UV_GIANGVIEN_PHANCONG to GIANGVIEN;
 grant select on ADMIN.PROJECT_DANGKI to GIANGVIEN;
 grant UPDATE (DIEMTH,DIEMQT,DIEMCK,DIEMTK) on ADMIN.PROJECT_DANGKI to GIANGVIEN;
 
-create or replace function SYS.SEC_GIANGVIEN_DANGKI_SEL_UPD(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
+create or replace function SYS.SEC_GIANGVIEN_DANGKI_SEL(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
     cursor cur_GIANGVIEN is (
@@ -49,18 +49,52 @@ begin
     close cur_GIANGVIEN;
 end;
 
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'GIANGVIEN_DANGKI_SEL_UPD');
+
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
         OBJECT_NAME=>'PROJECT_DANGKI',
-        POLICY_NAME =>'GIANGVIEN_DANGKI_SEL_UPD',
+        POLICY_NAME =>'GIANGVIEN_DANGKI_SEL',
         FUNCTION_SCHEMA => 'ADMIN',
-        POLICY_FUNCTION=>'SEC_GIANGVIEN_DANGKI_SEL_UPD',
-        STATEMENT_TYPES=>'SELECT,UPDATE',
+        POLICY_FUNCTION=>'SEC_GIANGVIEN_DANGKI_SEL',
+        STATEMENT_TYPES=>'SELECT'
+    );
+END;
+/
+create or replace function SYS.SEC_GIANGVIEN_DANGKI_UPD(P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
+RETURN VARCHAR2
+AS
+    cursor cur_GIANGVIEN is (
+                                select VAITRO
+                                from ADMIN.PROJECT_NHANSU
+                                where MANV = SYS_CONTEXT('USERENV','SESSION_USER')
+                            );
+    vaitro varchar(40);
+begin
+    open cur_GIANGVIEN;
+    fetch cur_GIANGVIEN into vaitro;
+    if (vaitro = 'GIANGVIEN') then
+        begin
+            return 'MANV = ''' || SYS_CONTEXT('USERENV','SESSION_USER') || '''';
+        end;
+    else
+        return '';
+    end if;
+end;
+/
+BEGIN
+    dbms_rls.add_policy(
+        OBJECT_SCHEMA =>'ADMIN',
+        OBJECT_NAME=>'PROJECT_DANGKI',
+        POLICY_NAME =>'GIANGVIEN_DANGKI_UPD',
+        FUNCTION_SCHEMA => 'ADMIN',
+        POLICY_FUNCTION=>'SEC_GIANGVIEN_DANGKI_UPD',
+        STATEMENT_TYPES=>'UPDATE',
         UPDATE_CHECK=> TRUE
     );
 END;
-
+/
 declare
     cursor cur_GIANGVIEN is (select * from ADMIN.PROJECT_NHANSU where VAITRO = 'GIANGVIEN');
     STRSQL varchar2(1000);

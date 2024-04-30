@@ -133,14 +133,6 @@ end;
 /
 grant select on ADMIN.PROJECT_HOCPHAN to SINHVIEN;
 
-begin
-    dbms_rls.drop_policy(
-        OBJECT_SCHEMA=> 'ADMIN',
-        OBJECT_NAME=>'PROJECT_KHMO',
-        POLICY_NAME=> 'SINHVIEN_HOCPHAN_SEL'
-    );
-end;
-
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
