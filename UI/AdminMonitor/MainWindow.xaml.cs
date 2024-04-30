@@ -2,6 +2,7 @@
 using AdminMonitor.SINHVIEN;
 using AdminMonitor.GIAOVIEN;
 using System.Windows;
+using AdminMonitor.GIAOVU;
 
 
 namespace AdminMonitor
@@ -53,6 +54,10 @@ namespace AdminMonitor
                             }
                             break;
                         case "GIAOVU":
+                            if (username != null)
+                            {
+                                window = new GiaoVuMainWindow(con,username);
+                            }
                             break;
                         case "TRGKHOA":
                             break;

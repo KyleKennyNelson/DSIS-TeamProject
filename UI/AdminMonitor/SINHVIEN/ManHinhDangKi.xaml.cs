@@ -31,6 +31,11 @@ namespace AdminMonitor.SINHVIEN
             Conn = connection;
             TTSinhVien = new SinhVien() { MASV  = masv };
         }
+        public ManHinhDangKi(OracleConnection connection)
+        {
+            InitializeComponent();
+            Conn = connection;
+        }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -39,12 +44,9 @@ namespace AdminMonitor.SINHVIEN
             await Task.Run(() => Thread.Sleep(10));
             loadingProgressBar.Value = 40;
 
-            if (TTSinhVien != null && TTSinhVien.MASV != null)
-            {
-                List<DangKi>? data = null;
-                await Task.Run(() => data = Controller_DangKi.GetDangKi(Conn, TTSinhVien.MASV));
-                DangKiDataGrid.ItemsSource = data;
-            }
+            List<DangKi>? data = null;
+            await Task.Run(() => data = Controller_DangKi.GetDangKi(Conn));
+            DangKiDataGrid.ItemsSource = data;
 
             await Task.Run(() => Thread.Sleep(25));
             loadingProgressBar.Value = 80;
@@ -56,6 +58,7 @@ namespace AdminMonitor.SINHVIEN
 
         private async void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            bool result = false;
             var item = (DangKi?)DangKiDataGrid.SelectedItems[0];
             loadingProgressBar.IsIndeterminate = false;
             loadingProgressBar.Value = 10;
@@ -64,7 +67,7 @@ namespace AdminMonitor.SINHVIEN
 
             if (item != null && item.MaSV != null && item.MaHP != null && item.HK != null && item.Nam != null && item.MaCT != null)
             {
-                Controller_DangKi.DeleteDangKi(Conn, item.MaSV, item.MaHP, (int)item.HK, (int)item.Nam, item.MaCT);
+                result = Controller_DangKi.DeleteDangKi(Conn, item.MaSV, item.MaHP, (int)item.HK, (int)item.Nam, item.MaCT);
             }
             else
             {
@@ -77,19 +80,24 @@ namespace AdminMonitor.SINHVIEN
             loadingProgressBar.Value = 100;
             await Task.Run(() => Thread.Sleep(25));
             loadingProgressBar.IsIndeterminate = true;
-            MessageBox.Show("Xoá thông tin đăng kí thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            if(result)
+            {
+                MessageBox.Show($"Xoá thông tin đăng kí thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Không thể xoá thông tin đăng kí!", "Thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
 
             loadingProgressBar.IsIndeterminate = false;
             loadingProgressBar.Value = 10;
             await Task.Run(() => Thread.Sleep(10));
             loadingProgressBar.Value = 40;
 
-            if (TTSinhVien != null && TTSinhVien.MASV != null)
-            {
-                List<DangKi>? data = null;
-                await Task.Run(() => data = Controller_DangKi.GetDangKi(Conn, TTSinhVien.MASV));
-                DangKiDataGrid.ItemsSource = data;
-            }
+            List<DangKi>? data = null;
+            await Task.Run(() => data = Controller_DangKi.GetDangKi(Conn));
+            DangKiDataGrid.ItemsSource = data;
 
             await Task.Run(() => Thread.Sleep(25));
             loadingProgressBar.Value = 80;
@@ -104,6 +112,12 @@ namespace AdminMonitor.SINHVIEN
             if(TTSinhVien != null && TTSinhVien.MASV != null)
             {
                 var screen = new ThemDangKiWindow(Conn, TTSinhVien.MASV);
+                screen.ShowDialog();
+                UserControl_Loaded(sender, e);
+            }
+            else
+            {
+                var screen = new ThemDangKiWindow(Conn);
                 screen.ShowDialog();
                 UserControl_Loaded(sender, e);
             }

@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="70"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -27,7 +28,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="2">
+        <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Label Content="Mã sinh viên đăng kí:"/>
+            <TextBox x:Name="MaSVTextBox" Width="150" VerticalContentAlignment="Center"/>
+        </StackPanel>
+        
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -36,7 +42,7 @@
             <Button x:Name="ConfirmButton" Content="Đăng kí" Width="50" Height="30" Grid.Column="1" Click="ConfirmButton_Click"/>
         </Grid>
 
-        <StatusBar Grid.Row="3">
+        <StatusBar Grid.Row="4">
             <StatusBarItem>
                 <ProgressBar x:Name="loadingProgressBar" Height="20" Width="150" IsIndeterminate="True"/>
             </StatusBarItem>

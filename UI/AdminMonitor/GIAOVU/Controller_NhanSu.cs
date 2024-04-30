@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdminMonitor.SINHVIEN
+namespace AdminMonitor.GIAOVU
 {
-    internal class Controller_SinhVien
+    public class Controller_NhanSu
     {
-        static public SinhVien? GetSinhVien(OracleConnection Conn, string MASV)
+        public static NhanSu? GetTTCaNhan(OracleConnection Conn, string MaNV)
         {
-            SinhVien? result = null;
+            NhanSu? result = null;
 
             if (Conn.State == ConnectionState.Closed)
             {
@@ -21,12 +21,12 @@ namespace AdminMonitor.SINHVIEN
             OracleCommand query = Conn.CreateCommand();
             query.CommandText = """
                                     SELECT *
-                                    FROM ADMIN.PROJECT_SINHVIEN
-                                    WHERE MASV = :masv
+                                    FROM ADMIN.UV_TTCANHAN_NHANSU
+                                    WHERE MANV = :manv
                                     FETCH FIRST 1 ROWS ONLY
                                     """;
             query.CommandType = CommandType.Text;
-            query.Parameters.Add(new OracleParameter("masv", MASV));
+            query.Parameters.Add(new OracleParameter("manv", MaNV));
             try
             {
                 OracleDataReader datareader = query.ExecuteReader();
@@ -35,29 +35,29 @@ namespace AdminMonitor.SINHVIEN
                 table.Load(datareader);
 
                 DataRow dataRowView = table.Rows[0];
-                result = new SinhVien()
+                result = new NhanSu()
                 {
-                    MASV = (string)dataRowView["MASV"],
+                    MaNV = (string)dataRowView["MANV"],
                     HoTen = (string)dataRowView["HOTEN"],
                     GioiTinh = (string)dataRowView["PHAI"],
                     NgaySinh = (DateTime)dataRowView["NGSINH"],
-                    DiaChi = (string)dataRowView["DIACHI"],
                     SDT = (string)dataRowView["DT"],
-                    MaChuongTrinh = (string)dataRowView["MACT"],
-                    MaNganh = (string)dataRowView["MANGANH"],
                     CoSo = (string)dataRowView["COSO"],
-                    DTBTL = (double)(decimal)dataRowView["DTBTL"],
-                    SOTCTL = (int)(decimal)dataRowView["SOTCTL"]
+                    VaiTro = (string)dataRowView["VAITRO"],
+                    MaDV = (string)dataRowView["DONVI"],
+                    PhuCap = (int)(decimal)dataRowView["PHUCAP"]
+
                 };
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
-            
+
             return result;
         }
 
-        static public void UpdateSinhVien(OracleConnection Conn, string MASV, string SDT, string DiaChi)
+        public static void UpdateSDT(OracleConnection Conn, string SDT)
         {
             if (Conn.State == ConnectionState.Closed)
             {
@@ -65,16 +65,16 @@ namespace AdminMonitor.SINHVIEN
             }
             OracleCommand query = Conn.CreateCommand();
             query.CommandText = """
-                                    UPDATE ADMIN.PROJECT_SINHVIEN SET DT = :sdt, DIACHI = :diachi 
+                                    UPDATE ADMIN.UV_SDT_NHANSU SET DT = :sdt 
                                     """;
             query.CommandType = CommandType.Text;
             //query.Parameters.Add(new OracleParameter("masv", MASV));
             query.Parameters.Add(new OracleParameter("sdt", SDT));
-            query.Parameters.Add(new OracleParameter("diachi", DiaChi));
             try
             {
                 int count = query.ExecuteNonQuery();
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
