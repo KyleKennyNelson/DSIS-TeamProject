@@ -49,7 +49,7 @@ begin
     close cur_GIANGVIEN;
 end;
 
---execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'GIANGVIEN_DANGKI_SEL_UPD');
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'GIANGVIEN_DANGKI_UPD');
 
 BEGIN
     dbms_rls.add_policy(
@@ -76,7 +76,7 @@ begin
     fetch cur_GIANGVIEN into vaitro;
     if (vaitro = 'GIANGVIEN') then
         begin
-            return 'MANV = ''' || SYS_CONTEXT('USERENV','SESSION_USER') || '''';
+            return 'MAGV = ''' || SYS_CONTEXT('USERENV','SESSION_USER') || '''';
         end;
     else
         return '';
@@ -88,7 +88,7 @@ BEGIN
         OBJECT_SCHEMA =>'ADMIN',
         OBJECT_NAME=>'PROJECT_DANGKI',
         POLICY_NAME =>'GIANGVIEN_DANGKI_UPD',
-        FUNCTION_SCHEMA => 'ADMIN',
+        FUNCTION_SCHEMA => 'SYS',
         POLICY_FUNCTION=>'SEC_GIANGVIEN_DANGKI_UPD',
         STATEMENT_TYPES=>'UPDATE',
         UPDATE_CHECK=> TRUE
