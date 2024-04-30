@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="AdminMonitor.GIAOVU.DSSinhVienUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AdminMonitor.GIAOVU"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded" Background="White">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Button x:Name="ThemButton" Content="Thêm" Width="50" Height="30" Click="ThemButton_Click"/> 
+
+        <DataGrid x:Name="MainDataGrid" Grid.Row="1" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã sinh viên" Binding="{Binding MASV}"/>
+                <DataGridTextColumn Header="Họ tên" Binding="{Binding HoTen}"/>
+                <DataGridTextColumn Header="Giới tính" Binding="{Binding GioiTinh}"/>
+                <DataGridTextColumn Header="Ngày sinh" Binding="{Binding NgaySinh}"/>
+                <DataGridTextColumn Header="Địa chỉ" Binding="{Binding DiaChi}"/>
+                <DataGridTextColumn Header="Số điện thoại" Binding="{Binding SDT}"/>
+                <DataGridTextColumn Header="Mã chương trình" Binding="{Binding MaChuongTrinh}"/>
+                <DataGridTextColumn Header="Mã ngành" Binding="{Binding MaNganh}"/>
+                <DataGridTextColumn Header="Cơ sở" Binding="{Binding CoSo}"/>
+                <DataGridTextColumn Header="Số tín chỉ tích luỹ" Binding="{Binding SOTCTL}"/>
+                <DataGridTextColumn Header="Điểm trung bình tích luỹ" Binding="{Binding DTBTL}"/>
+            </DataGrid.Columns>
+            <DataGrid.Resources>
+                <ContextMenu x:Key="RightClickMenu">
+                    <MenuItem Header="Cập nhật" x:Name="UpdateMenuItem" Click="UpdateMenuItem_Click"/>
+                </ContextMenu>
+            </DataGrid.Resources>
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="{x:Type DataGridRow}" >
+                    <Setter Property="ContextMenu" Value="{StaticResource RightClickMenu}" />
+                </Style>
+            </DataGrid.ItemContainerStyle>
+        </DataGrid>
+
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <ProgressBar x:Name="loadingProgressBar" Height="20" Width="150" IsIndeterminate="True"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</UserControl>

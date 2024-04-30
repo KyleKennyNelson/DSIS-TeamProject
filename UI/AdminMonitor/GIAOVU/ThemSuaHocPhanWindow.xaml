@@ -1,0 +1,84 @@
+﻿<Window x:Class="AdminMonitor.GIAOVU.ThemSuaHocPhanWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminMonitor.GIAOVU"
+        mc:Ignorable="d"
+        Title="ThemSuaHocPhanWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="Transparent" BorderThickness="0.5" BorderBrush="Black" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Border Background="Transparent" BorderThickness="0.5" BorderBrush="Black" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+        <Border Background="Transparent" BorderThickness="0.5" BorderBrush="Black" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"/>
+        <Border Background="Transparent" BorderThickness="0.5" BorderBrush="Black"  Grid.ColumnSpan="2" Grid.RowSpan="6"/>
+
+        <StackPanel VerticalAlignment="Center" Margin="20,0,0,0" HorizontalAlignment="Center" Grid.ColumnSpan="2">
+            <Label Content="Thêm học phần" FontSize="16" x:Name="mainTitle"/>
+            <Label Content="{Binding MaHP, UpdateSourceTrigger=PropertyChanged}" d:Content="DV001" FontSize="22" HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Mã học phần:"/>
+            <TextBox x:Name="MaHocPhanTextBox" Text="{Binding MaHP, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Tên học phần:"/>
+            <TextBox x:Name="TenHocPhanTextBox" Text="{Binding TenHP, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Số tín chỉ:"/>
+            <TextBox x:Name="SoTinChiTextBox" Text="{Binding SoTinChi, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Số tiết lí thuyết:"/>
+            <TextBox x:Name="SoTietLiThuyet" Text="{Binding SoTietLiThuyet, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Số tiết thực hành:"/>
+            <TextBox x:Name="SoTietThucHanhTextBox" Text="{Binding SoTietThucHanh, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Số sinh viên tham dự:"/>
+            <TextBox x:Name="SoSinhVienThamDuTextBox" Text="{Binding SoSinhVienThamDu, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2">
+            <Label Content="Mã đơn vị phụ trách:"/>
+            <TextBox x:Name="MaDVTextBox" Text="{Binding MaDV, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <Grid Grid.Row="5" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="SaveButton" Grid.Column="1" Content="Lưu" Width="50" Height="30" Click="SaveButton_Click"/>
+            <Button x:Name="CancelButotn" Grid.Column="0" Content="Huỷ" Width="50" Height="30" Click="CancelButotn_Click"/>
+        </Grid>
+
+        <StatusBar Grid.Row="6" Grid.ColumnSpan="3">
+            <StatusBarItem>
+                <ProgressBar x:Name="loadingBar" Height="20" Width="150" IsIndeterminate="True"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

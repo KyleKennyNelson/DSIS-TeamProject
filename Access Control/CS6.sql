@@ -215,8 +215,8 @@ begin
         ngayBatDauHocKi := TO_DATE(ngayBatDauHocKi_str,'YYYY-MM-DD');
         
         
-        --return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (sysdate - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
-        return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'') - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
+        return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (sysdate - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
+        --return 'MASV = ''' || masv || ''' and NAM = ''' || namHienTai || ''' and HK = ''' || hocKiHienTai || ''' and (TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'') - TO_DATE(''' || TO_CHAR(ngayBatDauHocKi) || ''',''DD-MON-YY'')) < 14';
     else
         return '';
     end if;

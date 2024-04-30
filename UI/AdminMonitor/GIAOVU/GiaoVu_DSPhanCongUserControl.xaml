@@ -1,36 +1,28 @@
-﻿<UserControl x:Class="AdminMonitor.SINHVIEN.ManHinhDangKi"
+﻿<UserControl x:Class="AdminMonitor.GIAOVU.GiaoVu_DSPhanCongUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:AdminMonitor.SINHVIEN"
+             xmlns:local="clr-namespace:AdminMonitor.GIAOVU"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded" d:Background="White">
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded" Background="White">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="DangKiButton" Content="Đăng kí" Width="50" Height="30" Click="DangKiButton_Click"/>
-
-        <DataGrid x:Name="DangKiDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid x:Name="MainDataGrid" Grid.Row="0" IsReadOnly="True" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Mã sinh viên" Binding="{Binding MaSV}"/>
-                <DataGridTextColumn Header="Mã giáo viên" Binding="{Binding MaGV}"/>
+                <DataGridTextColumn Header="Mã giảng viên" Binding="{Binding MaGV}"/>
                 <DataGridTextColumn Header="Mã học phần" Binding="{Binding MaHP}"/>
                 <DataGridTextColumn Header="Học kì" Binding="{Binding HK}"/>
                 <DataGridTextColumn Header="Năm" Binding="{Binding Nam}"/>
                 <DataGridTextColumn Header="Mã chương trình" Binding="{Binding MaCT}"/>
-                <DataGridTextColumn Header="Điểm thực hành" Binding="{Binding DiemTH}"/>
-                <DataGridTextColumn Header="Điểm quá trình" Binding="{Binding DiemQT}"/>
-                <DataGridTextColumn Header="Điểm cuối kì" Binding="{Binding DiemCK}"/>
-                <DataGridTextColumn Header="Điểm tổng kết" Binding="{Binding DiemTK}"/>
             </DataGrid.Columns>
             <DataGrid.Resources>
                 <ContextMenu x:Key="RightClickMenu">
-                    <MenuItem Header="Delete" x:Name="DeleteMenuItem" Click="DeleteMenuItem_Click"/>
+                    <MenuItem Header="Xoá" x:Name="DeleteMenuItem" Click="DeleteMenuItem_Click"/>
                 </ContextMenu>
             </DataGrid.Resources>
             <DataGrid.ItemContainerStyle>
@@ -40,7 +32,7 @@
             </DataGrid.ItemContainerStyle>
         </DataGrid>
 
-        <StatusBar Grid.Row="2">
+        <StatusBar Grid.Row="1">
             <StatusBarItem>
                 <ProgressBar x:Name="loadingProgressBar" Height="20" Width="150" IsIndeterminate="True"/>
             </StatusBarItem>

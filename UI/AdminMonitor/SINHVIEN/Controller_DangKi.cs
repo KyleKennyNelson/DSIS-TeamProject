@@ -10,7 +10,7 @@ namespace AdminMonitor.SINHVIEN
 {
     internal static class Controller_DangKi
     {
-        public static List<DangKi> GetDangKi(OracleConnection Conn, string masv)
+        public static List<DangKi> GetDangKi(OracleConnection Conn)
         {
             var result = new List<DangKi>();
 
@@ -22,10 +22,8 @@ namespace AdminMonitor.SINHVIEN
             query.CommandText = """
                                     SELECT *
                                     FROM ADMIN.PROJECT_DANGKI
-                                    WHERE MASV = :masv
                                     """;
             query.CommandType = CommandType.Text;
-            query.Parameters.Add(new OracleParameter("masv", masv));
             try
             {
                 OracleDataReader datareader = query.ExecuteReader();
@@ -81,8 +79,9 @@ namespace AdminMonitor.SINHVIEN
 
             return result;
         }
-        static public void DeleteDangKi(OracleConnection Conn, string MASV, string MAHP, int HK, int NAM, string MACT)
+        static public bool DeleteDangKi(OracleConnection Conn, string MASV, string MAHP, int HK, int NAM, string MACT)
         {
+            bool result = false;
             if (Conn.State == ConnectionState.Closed)
             {
                 Conn.Open();
@@ -106,14 +105,20 @@ namespace AdminMonitor.SINHVIEN
             try
             {
                 int count = query.ExecuteNonQuery();
+                if (count > 0)
+                {
+                    result = true;
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
+            return result;
         }
-        public static void InsertDangKi(OracleConnection Conn, string MaSV, PhanCong data)
+        public static bool InsertDangKi(OracleConnection Conn, string MaSV, PhanCong data)
         {
+            bool result = false;
             if (Conn.State == ConnectionState.Closed)
             {
                 Conn.Open();
@@ -133,11 +138,16 @@ namespace AdminMonitor.SINHVIEN
             try
             {
                 int count = query.ExecuteNonQuery();
+                if(count > 0)
+                {
+                    result = true;
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
             }
+            return result;
         }
     }
 }

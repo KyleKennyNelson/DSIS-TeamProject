@@ -5,21 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdminMonitor.SINHVIEN
+namespace AdminMonitor.GIAOVU
 {
-    public class SinhVien : INotifyPropertyChanged
+    public class NhanSu : INotifyPropertyChanged
     {
-        public required string MASV { get; set; }
+        public string? MaNV { get; set; }
         public string? HoTen { get; set; }
         public string? GioiTinh { get; set; }
-        public string? SDT { get; set; }
-        public string? DiaChi { get; set; }
         public DateTime? NgaySinh { get; set; }
-        public string? MaNganh { get; set; }
+        public int? PhuCap { get; set; }
+
+        public string? SDT { get; set; }
+
+        public string? MaDV { get; set; }
         public string? CoSo { get; set; }
-        public string? MaChuongTrinh { get; set; }
-        public double? DTBTL { get; set; }
-        public int? SOTCTL { get; set; }
+
+        public string? VaiTro { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

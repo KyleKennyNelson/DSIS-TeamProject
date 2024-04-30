@@ -1,0 +1,65 @@
+﻿<Window x:Class="AdminMonitor.GIAOVU.ThemKHMOWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminMonitor.GIAOVU"
+        mc:Ignorable="d"
+        Title="ThemXoaKHMOWindow" Height="450" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="Transparent" BorderThickness="0.5" BorderBrush="Black" Grid.Column="0" Grid.Row="1" Grid.RowSpan="4"/>
+        <Border Background="Transparent" BorderThickness="0.5" BorderBrush="Black" Grid.Column="0" Grid.Row="5" Grid.RowSpan="1"/>
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0">
+            <Label Content="Thêm kế hoạch mở" FontSize="16" x:Name="mainTitle"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Mã học phần:"/>
+            <TextBox x:Name="MaHocPhanText" Text="{Binding MaHP, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Học kì:"/>
+            <TextBox x:Name="HocKiTextBox" Text="{Binding HK, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Năm:"/>
+            <TextBox x:Name="NamTextBox" Text="{Binding Nam, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Mã chương trình:"/>
+            <TextBox x:Name="MaChuongTrinhTextBox" Text="{Binding MaCT, UpdateSourceTrigger=PropertyChanged}" d:Text="Gay" Width="200" HorizontalAlignment="Left" Height="25" VerticalContentAlignment="Center"/>
+        </StackPanel>
+
+        <Grid Grid.Row="5" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="SaveButton" Grid.Column="1" Content="Lưu" Width="50" Height="30" Click="SaveButton_Click"/>
+            <Button x:Name="CancelButotn" Grid.Column="0" Content="Huỷ" Width="50" Height="30" Click="CancelButotn_Click"/>
+        </Grid>
+
+        <StatusBar Grid.Row="6" Grid.ColumnSpan="3">
+            <StatusBarItem>
+                <ProgressBar x:Name="loadingBar" Height="20" Width="150" IsIndeterminate="True"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

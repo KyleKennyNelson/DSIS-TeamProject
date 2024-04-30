@@ -1,7 +1,6 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,15 +14,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AdminMonitor.SINHVIEN
+namespace AdminMonitor.GIAOVU
 {
     /// <summary>
-    /// Interaction logic for XemDSKHMOUserControl.xaml
+    /// Interaction logic for DSHocPhanUserControl.xaml
     /// </summary>
-    public partial class XemDSKHMOUserControl : UserControl
+    public partial class DSHocPhanUserControl : UserControl
     {
         OracleConnection Conn;
-        public XemDSKHMOUserControl(OracleConnection connection)
+        List<HocPhan>? list = null;
+        public DSHocPhanUserControl(OracleConnection connection)
         {
             InitializeComponent();
             Conn = connection;
@@ -31,16 +31,16 @@ namespace AdminMonitor.SINHVIEN
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            ThemButton.IsEnabled = false;
             loadingProgressBar.IsIndeterminate = false;
             loadingProgressBar.Value = 10;
             await Task.Run(() => Thread.Sleep(10));
             loadingProgressBar.Value = 40;
 
-            List<KHMO>? data = null;
-            await Task.Run(() => {
-                data = Controller_KHMO.GetKHMO(Conn);
-            });
-            MainDataGrid.ItemsSource = data;
+            List<HocPhan>? data = null;
+            await Task.Run(() => data = Controller_HocPhan.getAllHocPhan(Conn));
+            list = data;
+            MainDataGrid.ItemsSource = list;
 
             await Task.Run(() => Thread.Sleep(25));
             loadingProgressBar.Value = 80;
@@ -49,6 +49,25 @@ namespace AdminMonitor.SINHVIEN
             await Task.Run(() => Thread.Sleep(25));
 
             loadingProgressBar.IsIndeterminate = true;
+            ThemButton.IsEnabled = true;
+        }
+
+        private void UpdateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            HocPhan? selected = (HocPhan?)MainDataGrid.SelectedItem;
+            if (selected != null)
+            {
+                var screen = new ThemSuaHocPhanWindow(Conn, selected);
+                screen.ShowDialog();
+                UserControl_Loaded(sender, e);
+            }
+        }
+
+        private void ThemButton_Click(object sender, RoutedEventArgs e)
+        {
+            var screen = new ThemSuaHocPhanWindow(Conn);
+            screen.ShowDialog();
+            UserControl_Loaded(sender, e);
         }
     }
 }

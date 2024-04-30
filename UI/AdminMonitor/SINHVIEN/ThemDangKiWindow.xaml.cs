@@ -32,12 +32,20 @@ namespace AdminMonitor.SINHVIEN
 
         List<DataGridItems> dataGridContext = new List<DataGridItems>();
         OracleConnection Conn;
-        string? MaSV = string.Empty;
+        string? MaSV = null;
         public ThemDangKiWindow(OracleConnection connection, string MaSV)
         {
             InitializeComponent();
             Conn = connection;
             this.MaSV = MaSV;
+            MaSVTextBox.Text = MaSV;
+            MaSVTextBox.IsEnabled = false;
+        }
+
+        public ThemDangKiWindow(OracleConnection connection)
+        {
+            InitializeComponent();
+            Conn = connection;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -54,6 +62,19 @@ namespace AdminMonitor.SINHVIEN
                 List<PhanCong>? data = null;
                 await Task.Run(() => data = Controller_PhanCong.GetPhanCongs(Conn, MaSV));
                 if(data != null)
+                {
+                    foreach (var phancong in data)
+                    {
+                        dataGridContext.Add(new DataGridItems { Phancong = phancong, IsChecked = false });
+                    }
+                    MainDataGrid.ItemsSource = dataGridContext;
+                }
+            }
+            else
+            {
+                List<PhanCong>? data = null;
+                await Task.Run(() => data = Controller_PhanCong.GetPhanCongs(Conn));
+                if (data != null)
                 {
                     foreach (var phancong in data)
                     {
@@ -89,6 +110,8 @@ namespace AdminMonitor.SINHVIEN
             await Task.Run(() => Thread.Sleep(10));
             loadingProgressBar.Value = 40;
 
+            MaSV = MaSVTextBox.Text;
+            List<string> successfulRecord = new List<string>();
             await Task.Run(() => {
                 try
                 {
@@ -98,9 +121,17 @@ namespace AdminMonitor.SINHVIEN
                         {
                             if (item.IsChecked && item.Phancong != null)
                             {
-                                Controller_DangKi.InsertDangKi(Conn, MaSV, item.Phancong);
+                                bool result = Controller_DangKi.InsertDangKi(Conn, MaSV, item.Phancong);
+                                if (result && item.Phancong.MaHP != null)
+                                {
+                                    successfulRecord.Add(item.Phancong.MaHP);
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Nhập mã sinh viên!", "Thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
@@ -119,9 +150,15 @@ namespace AdminMonitor.SINHVIEN
             CancelButton.IsEnabled = true;
             ConfirmButton.IsEnabled = true;
 
+            string report = "";
+            foreach (var item in successfulRecord)
+            {
+                report = $"{report}, {item}";
+            }
+
             if(status)
             {
-                MessageBox.Show("Đăng kí học phần thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Các học phần {report} được đăng kí thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             
             DialogResult= true;

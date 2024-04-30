@@ -1,7 +1,7 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿using AdminMonitor.SINHVIEN;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,15 +15,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AdminMonitor.SINHVIEN
+namespace AdminMonitor.GIAOVU
 {
     /// <summary>
-    /// Interaction logic for XemDSKHMOUserControl.xaml
+    /// Interaction logic for GIAOVUDSKHMOUserControl.xaml
     /// </summary>
-    public partial class XemDSKHMOUserControl : UserControl
+    public partial class GIAOVUDSKHMOUserControl : UserControl
     {
         OracleConnection Conn;
-        public XemDSKHMOUserControl(OracleConnection connection)
+        List<KHMO>? list = null;
+        public GIAOVUDSKHMOUserControl(OracleConnection connection)
         {
             InitializeComponent();
             Conn = connection;
@@ -31,16 +32,16 @@ namespace AdminMonitor.SINHVIEN
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            ThemButton.IsEnabled = false;
             loadingProgressBar.IsIndeterminate = false;
             loadingProgressBar.Value = 10;
             await Task.Run(() => Thread.Sleep(10));
             loadingProgressBar.Value = 40;
 
             List<KHMO>? data = null;
-            await Task.Run(() => {
-                data = Controller_KHMO.GetKHMO(Conn);
-            });
-            MainDataGrid.ItemsSource = data;
+            await Task.Run(() => data = Controller_KHMO.GetKHMO(Conn));
+            list = data;
+            MainDataGrid.ItemsSource = list;
 
             await Task.Run(() => Thread.Sleep(25));
             loadingProgressBar.Value = 80;
@@ -49,6 +50,14 @@ namespace AdminMonitor.SINHVIEN
             await Task.Run(() => Thread.Sleep(25));
 
             loadingProgressBar.IsIndeterminate = true;
+            ThemButton.IsEnabled = true;
+        }
+
+        private void ThemButton_Click(object sender, RoutedEventArgs e)
+        {
+            var screen = new ThemKHMOWindow(Conn);
+            screen.ShowDialog();
+            UserControl_Loaded(sender, e);
         }
     }
 }

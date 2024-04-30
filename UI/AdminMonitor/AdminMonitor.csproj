@@ -23,8 +23,6 @@
 
   <ItemGroup>
     <Folder Include="GIANGVIEN\" />
-    <Folder Include="GIAOVU\" />
-    <Folder Include="TRGKHOA\" />
     <Folder Include="TRGDONVI\" />
   </ItemGroup>
 
