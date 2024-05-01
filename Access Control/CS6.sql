@@ -29,7 +29,7 @@ begin
     end if;
 end;
 /
-
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_SINHVIEN',POLICY_NAME=> 'SINHVIEN_SINHVIEN_SEL_UPD');
 
 BEGIN
     dbms_rls.add_policy(
@@ -76,11 +76,13 @@ end;
 /
 grant select on ADMIN.PROJECT_KHMO to SINHVIEN;
 
+
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_KHMO',POLICY_NAME=> 'SSINHVIEN_KHMO_SEL');
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
         OBJECT_NAME=>'PROJECT_KHMO',
-        POLICY_NAME =>'SSINHVIEN_KHMO_SEL',
+        POLICY_NAME =>'SINHVIEN_KHMO_SEL',
         FUNCTION_SCHEMA => 'sys',
         POLICY_FUNCTION=>'SEC_SINHVIEN_KHMO_SEL',
         STATEMENT_TYPES=>'SELECT'
@@ -133,6 +135,9 @@ end;
 /
 grant select on ADMIN.PROJECT_HOCPHAN to SINHVIEN;
 
+
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_HOCPHAN',POLICY_NAME=> 'SINHVIEN_HOCPHAN_SEL');
+
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
@@ -167,6 +172,8 @@ begin
 end;
 
 grant select on ADMIN.PROJECT_DANGKI to SINHVIEN;
+
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'SINHVIEN_DANGKI_SEL');
 
 BEGIN
     dbms_rls.add_policy(
@@ -225,6 +232,8 @@ end;
 grant delete on ADMIN.PROJECT_DANGKI to SINHVIEN;
 grant insert (MASV,MAGV,MAHP,HK,NAM,MACT) on ADMIN.PROJECT_DANGKI to SINHVIEN;
 
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'SINHVIEN_DANGKI_INS_DEL');
+
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
@@ -267,6 +276,10 @@ begin
 end;
 /
 grant select on ADMIN.PROJECT_PHANCONG to SINHVIEN;
+
+--execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_PHANCONG',POLICY_NAME=> 'SINHVIEN_PHANCONG_SEL');
+
+
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
@@ -286,7 +299,7 @@ declare
 begin
     for row_SINHVIEN in cur_SINHVIEN
     loop
-        result := isUserExists(row_SINHVIEN.MASV);
+        result := admin.isUserExists(row_SINHVIEN.MASV);
         if(result = false) then
             STRSQL := 'CREATE USER ' || row_SINHVIEN.MASV || ' identified by 123';
             EXECUTE IMMEDIATE (STRSQL);
