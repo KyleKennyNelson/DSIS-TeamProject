@@ -25,21 +25,26 @@ grant SELECT, INSERT, DELETE, UPDATE on ADMIN.PROJECT_NHANSU to TRGKHOA;
 
 --XEM TAT CA CAC BANG
 grant select any table to TRGKHOA;
+/
 declare
     cursor cur_TRGDONVI is (select * from ADMIN.PROJECT_NHANSU where VAITRO = 'TRGKHOA');
     STRSQL varchar2(1000);
+    result boolean;
 begin
     for row_TRGDONVI in cur_TRGDONVI
     loop
-        STRSQL := 'CREATE USER ' || row_TRGDONVI.MANV || ' identified by 123';
-        EXECUTE IMMEDIATE (STRSQL);
+        result := admin.isUserExists(row_TRGDONVI.MANV);
+        if(result = false) then
+            STRSQL := 'CREATE USER ' || row_TRGDONVI.MANV || ' identified by 123';
+            EXECUTE IMMEDIATE (STRSQL);
+        end if;
         STRSQL := 'GRANT TRGKHOA to ' || row_TRGDONVI.MANV;
         EXECUTE IMMEDIATE (STRSQL);
         STRSQL := 'GRANT CONNECT to ' || row_TRGDONVI.MANV;
         EXECUTE IMMEDIATE (STRSQL);
     end loop;
 end;
-
+/
 declare
     cursor cur_TRGDONVI is (select * from ADMIN.PROJECT_NHANSU where VAITRO = 'TRGKHOA');
     STRSQL varchar2(1000);
@@ -50,4 +55,4 @@ begin
         EXECUTE IMMEDIATE (STRSQL);
     end loop;
 end;
-
+/
