@@ -14,6 +14,11 @@ namespace AdminMonitor.GIAOVIEN
     {
         OracleConnection _Conn;
         private string _MSSV;
+        private string _MaHP;
+        private decimal _HK;
+        private decimal _Nam;
+        private string _MaCT;
+
 
         private decimal _DTHshow;
         private decimal _DQTshow;
@@ -24,12 +29,16 @@ namespace AdminMonitor.GIAOVIEN
         private float _newDQT;
         private float _newDCK;
         private float _newDTK;
-        public CapNhatDuLieuSinhVienScreen(OracleConnection connection, string MSSV, decimal DTH,
-                                                            decimal DQT, decimal DCK, decimal DTK)
+        public CapNhatDuLieuSinhVienScreen(OracleConnection connection, string MSSV, string MaHP, decimal HK,
+                                           decimal Nam, string MaCT, decimal DTH, decimal DQT, decimal DCK, decimal DTK)
         {
             InitializeComponent();
             _Conn = connection;
             _MSSV = MSSV;
+            _MaHP = MaHP;
+            _HK = HK;
+            _Nam = Nam;
+            _MaCT = MaCT;
 
             _DTHshow = DTH;
             _DQTshow = DQT;
@@ -197,10 +206,18 @@ namespace AdminMonitor.GIAOVIEN
                                                     UPDATE admin.PROJECT_DANGKI
                                                     SET DIEMTH = :diemTH
                                                     WHERE MASV = :mssv
+                                                        and MAHP = :mahp
+                                                        and HK = :hk
+                                                        and NAM = :nam
+                                                        and MACT = :mact
                                                  """;
                             query.CommandType = CommandType.Text;
                             query.Parameters.Add(new OracleParameter(":diemTH", _newDTH));
                             query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
+                            query.Parameters.Add(new OracleParameter(":mahp", _MaHP));
+                            query.Parameters.Add(new OracleParameter(":hk", _HK));
+                            query.Parameters.Add(new OracleParameter(":nam", _Nam));
+                            query.Parameters.Add(new OracleParameter(":mact", _MaCT));
 
                             try
                             {
@@ -221,10 +238,18 @@ namespace AdminMonitor.GIAOVIEN
                                                     UPDATE admin.PROJECT_DANGKI
                                                     SET DIEMQT = :diemQT
                                                     WHERE MASV = :mssv
+                                                        and MAHP = :mahp
+                                                        and HK = :hk
+                                                        and NAM = :nam
+                                                        and MACT = :mact
                                                  """;
                             query.CommandType = CommandType.Text;
                             query.Parameters.Add(new OracleParameter(":diemQT", _newDQT));
                             query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
+                            query.Parameters.Add(new OracleParameter(":mahp", _MaHP));
+                            query.Parameters.Add(new OracleParameter(":hk", _HK));
+                            query.Parameters.Add(new OracleParameter(":nam", _Nam));
+                            query.Parameters.Add(new OracleParameter(":mact", _MaCT));
 
                             try
                             {
@@ -245,10 +270,18 @@ namespace AdminMonitor.GIAOVIEN
                                                     UPDATE admin.PROJECT_DANGKI
                                                     SET DIEMCK = :diemCK
                                                     WHERE MASV = :mssv
+                                                        and MAHP = :mahp
+                                                        and HK = :hk
+                                                        and NAM = :nam
+                                                        and MACT = :mact
                                                  """;
                             query.CommandType = CommandType.Text;
                             query.Parameters.Add(new OracleParameter(":diemCK", _newDCK));
                             query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
+                            query.Parameters.Add(new OracleParameter(":mahp", _MaHP));
+                            query.Parameters.Add(new OracleParameter(":hk", _HK));
+                            query.Parameters.Add(new OracleParameter(":nam", _Nam));
+                            query.Parameters.Add(new OracleParameter(":mact", _MaCT));
 
                             try
                             {
@@ -269,10 +302,18 @@ namespace AdminMonitor.GIAOVIEN
                                                     UPDATE admin.PROJECT_DANGKI
                                                     SET DIEMTK = :diemTK
                                                     WHERE MASV = :mssv
+                                                        and MAHP = :mahp
+                                                        and HK = :hk
+                                                        and NAM = :nam
+                                                        and MACT = :mact
                                                  """;
                             query.CommandType = CommandType.Text;
                             query.Parameters.Add(new OracleParameter(":diemTK", _newDTK));
                             query.Parameters.Add(new OracleParameter(":mssv", _MSSV));
+                            query.Parameters.Add(new OracleParameter(":mahp", _MaHP));
+                            query.Parameters.Add(new OracleParameter(":hk", _HK));
+                            query.Parameters.Add(new OracleParameter(":nam", _Nam));
+                            query.Parameters.Add(new OracleParameter(":mact", _MaCT));
 
                             try
                             {

@@ -208,18 +208,23 @@ namespace AdminMonitor.GIAOVIEN
             _currentPage = 1;
             totalItems = -1;
             GetDangKy(_currentPage, _rowsPerPage);
+            CapNhatDuLieuSinhVienContextItem.IsEnabled= true;
         }
 
         private void CapNhatDuLieuSinhVien_Click(object sender, RoutedEventArgs e)
         {
             DataRowView row = (DataRowView)dataGridView.SelectedItems[0];
             string MSSV = (string)row.Row.ItemArray[0];
+            string MaHP = (string)row.Row.ItemArray[1];
+            decimal HK = (decimal)row.Row.ItemArray[2];
+            decimal Nam = (decimal)row.Row.ItemArray[3];
+            string MaCT = (string)row.Row.ItemArray[4];
 
             decimal DTH = (decimal)row.Row.ItemArray[5];
             decimal DQT = (decimal)row.Row.ItemArray[6];
             decimal DCK = (decimal)row.Row.ItemArray[7];
             decimal DTK = (decimal)row.Row.ItemArray[8];
-            CapNhatDuLieuSinhVienScreen screen = new(con, MSSV, DTH, DQT, DCK, DTK);
+            CapNhatDuLieuSinhVienScreen screen = new(con, MSSV, MaHP, HK, Nam, MaCT, DTH, DQT, DCK, DTK);
             this.Hide();
             screen.ShowDialog();
             GetDangKy(_currentPage, _rowsPerPage);
