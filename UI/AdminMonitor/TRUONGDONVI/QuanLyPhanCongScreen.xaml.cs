@@ -58,7 +58,7 @@ namespace AdminMonitor.TRUONGDONVI
                 OracleCommand query = _con.CreateCommand();
                 query.CommandText = """
                                        SELECT MAGV, MAHP, HK, NAM, MACT, count(*) over() as "TotalItems"
-                                       FROM admin.UV_TRGDONVI_XEMPHANCONG
+                                       FROM admin.UV_TRGDONVI_PHANCONG
                                        Order by MAHP, NAM, HK
                                        offset :Skip rows
                                        fetch next :Take rows only

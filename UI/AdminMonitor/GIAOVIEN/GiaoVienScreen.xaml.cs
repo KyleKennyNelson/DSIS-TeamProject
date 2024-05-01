@@ -115,6 +115,7 @@ namespace AdminMonitor.GIAOVIEN
         {
             EditPhoneNumber screen = new EditPhoneNumber(con, _name);
             screen.ShowDialog();
+            GetEmpInfor();
         }
 
         private void GiaoVienScreen_Closed(object sender, EventArgs e)
