@@ -1,9 +1,9 @@
 --alter session set "_oracle_script"=true;
 -- drop user ADMIN CASCADE;
---create user ADMIN identified by 123;
---grant SYSDBA to ADMIN;
---grant DBA to ADMIN;
-
+create user ADMIN identified by 123;
+grant SYSDBA to ADMIN;
+grant DBA to ADMIN;
+/
 CREATE OR REPLACE FUNCTION ADMIN.isUserExists(pv_user IN varchar2)
 return BOOLEAN
 IS
@@ -23,11 +23,11 @@ BEGIN
         return TRUE;
     END IF;
 END;
-
+/
 --Drop PDB incase you need
-alter pluggable database user_pdb close immediate instances=all;
-alter session set container=CDB$ROOT;
-drop pluggable database user_pdb INCLUDING DATAFILES;
+--alter pluggable database user_pdb close immediate instances=all;
+--alter session set container=CDB$ROOT;
+--drop pluggable database user_pdb INCLUDING DATAFILES;
 --Create pluggable database
 create pluggable database user_pdb  admin user user_pdb identified by 123 roles=(connect) file_name_convert = ('/oradata','/user_pdb/');
 alter pluggable database user_pdb open;

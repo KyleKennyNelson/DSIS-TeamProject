@@ -3,13 +3,13 @@ create role GIANGVIEN;
 --drop role GIANGVIEN;
 grant NVCOBAN to GIANGVIEN;
 grant connect to GIANGVIEN;
-
+/
 create or replace view ADMIN.UV_GIANGVIEN_PHANCONG
 as
     select *
     from ADMIN.PROJECT_PHANCONG
     where MAGV = SYS_CONTEXT('USERENV','SESSION_USER');
-    
+/   
 grant select on ADMIN.UV_GIANGVIEN_PHANCONG to GIANGVIEN;
 grant select on ADMIN.PROJECT_DANGKI to GIANGVIEN;
 grant UPDATE (DIEMTH,DIEMQT,DIEMCK,DIEMTK) on ADMIN.PROJECT_DANGKI to GIANGVIEN;
@@ -32,7 +32,7 @@ AS
 begin
     open cur_GIANGVIEN;
     fetch cur_GIANGVIEN into vaitro;
-    if (vaitro = 'GIANGVIEN') then
+    if (vaitro = 'GIANGVIEN'  OR vaitro = 'TRGDONVI' OR vaitro = 'TRGKHOA') then
         begin
             STRSQL := '(';
             for row_PHANCONG in cur_PHANCONG
@@ -48,7 +48,7 @@ begin
     end if;
     close cur_GIANGVIEN;
 end;
-
+/
 --execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'GIANGVIEN_DANGKI_UPD');
 
 BEGIN
@@ -74,7 +74,7 @@ AS
 begin
     open cur_GIANGVIEN;
     fetch cur_GIANGVIEN into vaitro;
-    if (vaitro = 'GIANGVIEN') then
+    if (vaitro = 'GIANGVIEN' OR vaitro = 'TRGDONVI' OR vaitro = 'TRGKHOA') then
         begin
             return 'MAGV = ''' || SYS_CONTEXT('USERENV','SESSION_USER') || '''';
         end;

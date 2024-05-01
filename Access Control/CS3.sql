@@ -15,7 +15,7 @@ grant select,insert, update on ADMIN.PROJECT_KHMO to GIAOVU;
 
 --Quyen select tren quan he PROJECT_PHANCONG
 grant select on ADMIN.PROJECT_PHANCONG to GIAOVU;
-
+/
 --View cac dong phan cong lien quan cac hoc phan do van phong khoa phuj trach
 CREATE OR REPLACE VIEW admin.UV_VPK_PHANCONG
 AS 
@@ -71,7 +71,7 @@ BEGIN
         STATEMENT_TYPES=>'DELETE'
     );
 END;
-
+/
 --VIEW CHINH SUA QUAN H? DANGKY
 --CREATE OR REPLACE VIEW admin.UV_GV_DANGKI
 --AS 
@@ -122,10 +122,10 @@ begin
         return '';
     end if;
 end;
-
+/
 grant select, delete on ADMIN.PROJECT_DANGKI to GIAOVU;
 grant insert (MASV,MAGV,MAHP,HK,NAM,MACT) on ADMIN.PROJECT_DANGKI to GIAOVU;
-
+/
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
@@ -137,7 +137,7 @@ BEGIN
         UPDATE_CHECK => TRUE
     );
 END;
-
+/
 declare
     cursor cur_GIAOVU is (select * from ADMIN.PROJECT_NHANSU where VAITRO = 'GIAOVU');
     STRSQL varchar2(1000);
