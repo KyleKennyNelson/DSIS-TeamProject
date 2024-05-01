@@ -38,10 +38,10 @@
                    VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
 
 
-            <TextBox x:Name="NewMaGVBox" Width="160" Grid.Row="1" Grid.Column="0"
-                 TextAlignment="Center" FontSize="15" TextChanged="NewMaGVBox_TextChanged"/>
-            <TextBox x:Name="NewMaHPBox" Width="160" Grid.Row="1" Grid.Column="1"
-                 TextAlignment="Center" FontSize="15" TextChanged="NewMaHPBox_TextChanged"/>
+            <ComboBox x:Name="NewMaGVComboBox" Width="160" Grid.Row="1" Grid.Column="0"
+                 SelectionChanged="NewMaGVComboBox_SelectionChanged"/>
+            <ComboBox x:Name="NewMaHPComboBox" Width="160" Grid.Row="1" Grid.Column="1"
+                 SelectionChanged="NewMaHPComboBox_SelectionChanged"/>
             <TextBox x:Name="NewHKBox" Width="160" Grid.Row="1" Grid.Column="3"
                  TextAlignment="Center" FontSize="15" TextChanged="NewHKBox_TextChanged"/>
             <TextBox x:Name="NewNamBox" Width="160" Grid.Row="1" Grid.Column="2"

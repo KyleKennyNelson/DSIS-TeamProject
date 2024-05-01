@@ -26,6 +26,9 @@ namespace AdminMonitor.TRUONGDONVI
         OracleConnection _Conn;
         private string _mode;
 
+        private List<string> _MaNSList;
+        private List<string> _MaCSList;
+
         private string _MaNV;
         private string _Hoten;
         private string _Phai;
@@ -46,9 +49,11 @@ namespace AdminMonitor.TRUONGDONVI
         private string _newDonVi;
         private string _newCoSo;
         public QuanLyDataNhanSu(OracleConnection connection, string MaNV, string Hoten, string Phai, DateTime NgaySinh,
-                                int PhuCap, string DT, string VaiTro, string DonVi, string CoSo, string mode)
+                                int PhuCap, string DT, string VaiTro, string DonVi, string CoSo, string mode, List<string> MaNSList, List<string> MaCSList)
         {
             InitializeComponent();
+            _MaNSList = MaNSList;
+            _MaCSList = MaCSList;
             _Conn = connection;
             _mode = mode;
             _MaNV = MaNV;
@@ -74,8 +79,8 @@ namespace AdminMonitor.TRUONGDONVI
             if (_mode == "Update")
             {
                 ConfirmButton.Content = _mode;
-                NewMaNVBox.Text = _MaNV;
-                NewMaNVBox.IsReadOnly = true;
+                NewMaNSComboBox.ItemsSource = _MaNSList;
+                NewMaCSComboBox.ItemsSource = _MaCSList;
 
                 NewHoTenBox.Text = _Hoten;
                 NewHoTenBox.IsReadOnly = true;
@@ -101,8 +106,6 @@ namespace AdminMonitor.TRUONGDONVI
                 NewDonViBox.Text = _DonVi;
                 //NewDonViBox.IsReadOnly = true;
 
-                NewCoSoBox.Text = _CoSo;
-                //NewCoSoBox.IsReadOnly = true;
             }
             else if (_mode == "Add")
                 ConfirmButton.Content = _mode;
@@ -167,19 +170,13 @@ namespace AdminMonitor.TRUONGDONVI
                 return;
             }
         }
-
-        private void NewCoSoBox_TextChanged(object sender, EventArgs e)
+        private void NewMaNSComboBox_SelectionChanged(object sender, EventArgs e)
         {
-            try
-            {
-
-                _newCoSo = NewCoSoBox.Text;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            _newMaNV = (string)NewMaNSComboBox.SelectedItem;
+        }
+        private void NewMaCSComboBox_SelectionChanged(object sender, EventArgs e)
+        {
+            _newCoSo = (string)NewMaCSComboBox.SelectedItem;
         }
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
@@ -246,7 +243,7 @@ namespace AdminMonitor.TRUONGDONVI
                                             """;
 
                         query.CommandType = CommandType.Text;
-                        query.Parameters.Add(new OracleParameter(":manv", NewMaNVBox.Text));
+                        query.Parameters.Add(new OracleParameter(":manv", _newMaNV));
                         query.Parameters.Add(new OracleParameter(":hoten", NewHoTenBox.Text));
                         query.Parameters.Add(new OracleParameter(":phai", NewPhaiBox.Text));
                         query.Parameters.Add(new OracleParameter(":ngsinh", Convert.ToDateTime(NewNgaySinhBox.Text)));

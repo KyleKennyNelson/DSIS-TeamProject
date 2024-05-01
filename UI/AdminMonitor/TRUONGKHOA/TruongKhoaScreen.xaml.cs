@@ -32,13 +32,14 @@ namespace AdminMonitor.TRUONGKHOA
         }
         public OracleConnection con;
         DataTable empDT;
-        DataTable pcDT;
 
 
         string DisplayMode = "";
 
-
+        DataTable pcDT;
         DataTable svDT;
+        DataTable dkDT;
+        DataTable nsDT;
         DataTable dvDT;
         DataTable hpDT;
         DataTable khmDT;
@@ -118,7 +119,22 @@ namespace AdminMonitor.TRUONGKHOA
         {
             string mode = "Add";
             string role = "TruongKhoa";
-            var screen = new QuanLyDataPHANCONG(con, null, null, 0, 0, null, mode, role);
+
+            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAGVList.Contains((string)rows["MAGV"]))
+                    MAGVList.Add((string)rows["MAGV"]);
+            }
+
+            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAHPList.Contains((string)rows["MAHP"]))
+                    MAHPList.Add((string)rows["MAHP"]);
+            }
+
+            var screen = new QuanLyDataPHANCONG(con, null, null, 0, 0, null, mode, role, MAGVList, MAHPList);
             screen.ShowDialog();
             GetPHANCONGInfor();
         }
@@ -133,7 +149,22 @@ namespace AdminMonitor.TRUONGKHOA
             string MACT = (string)row.Row.ItemArray[4];
             string mode = "Update";
             string role = "TruongKhoa";
-            var screen = new QuanLyDataPHANCONG(con, MAGV, MAHP, HK, NAM, MACT, mode, role);
+
+            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAGVList.Contains((string)rows["MAGV"]))
+                    MAGVList.Add((string)rows["MAGV"]);
+            }
+
+            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAHPList.Contains((string)rows["MAHP"]))
+                    MAHPList.Add((string)rows["MAHP"]);
+            }
+
+            var screen = new QuanLyDataPHANCONG(con, MAGV, MAHP, HK, NAM, MACT, mode, role, MAGVList, MAHPList);
             screen.ShowDialog();
             GetPHANCONGInfor();
         }
@@ -226,19 +257,19 @@ namespace AdminMonitor.TRUONGKHOA
 
 
                 OracleDataReader datareader = query.ExecuteReader();
-                svDT = new DataTable();
-                svDT.Load(datareader);
-                if (totalItems == -1 && svDT.Rows.Count > 0)
+                nsDT = new DataTable();
+                nsDT.Load(datareader);
+                if (totalItems == -1 && nsDT.Rows.Count > 0)
                 {
-                    totalItems = int.Parse(svDT.Rows[0]["TotalNhanSu"].ToString());
+                    totalItems = int.Parse(nsDT.Rows[0]["TotalNhanSu"].ToString());
                     totalPages = (totalItems / rowsPerPage);
                     if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
                     else totalPages = (int)(totalItems / rowsPerPage) + 1;
                 }
 
 
-                svDT.Columns.Remove("TotalNhanSu");
-                dataGridView.ItemsSource = svDT.DefaultView;
+                nsDT.Columns.Remove("TotalNhanSu");
+                dataGridView.ItemsSource = nsDT.DefaultView;
                 DisplayMode = "NhanSu";
 
                 PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";
@@ -283,7 +314,18 @@ namespace AdminMonitor.TRUONGKHOA
         private void ThemDuLieuNhanSu_Click(object sender, RoutedEventArgs e)
         {
             string mode = "Add";
-            var screen = new QuanLyDataNhanSu(con, null, null, null, DateTime.Now, 0, null, null, null, null, mode);
+
+            List<string> MANSList = new List<string>(nsDT.Rows.Count);
+            foreach (DataRow rows in nsDT.Rows)
+            {
+                if (!MANSList.Contains((string)rows["MANV"]))
+                    MANSList.Add((string)rows["MANV"]);
+            }
+
+            List<string> MACSList = new List<string>();
+            MACSList.Add("CS1");
+            MACSList.Add("CS2");
+            var screen = new QuanLyDataNhanSu(con, null, null, null, DateTime.Now, 0, null, null, null, null, mode, MANSList, MACSList);
             screen.ShowDialog();
             GetNhanSu(_currentPage, _rowsPerPage);
         }
@@ -302,8 +344,19 @@ namespace AdminMonitor.TRUONGKHOA
             string DONVI = (string)row.Row.ItemArray[7];
             string COSO = (string)row.Row.ItemArray[8];
 
+            List<string> MANSList = new List<string>(nsDT.Rows.Count);
+            foreach (DataRow rows in nsDT.Rows)
+            {
+                if (!MANSList.Contains((string)rows["MANS"]))
+                    MANSList.Add((string)rows["MANS"]);
+            }
+
+            List<string> MACSList = new List<string>();
+            MACSList.Add("CS1");
+            MACSList.Add("CS2");
+
             var screen = new QuanLyDataNhanSu(con, MANV, HOTEN, PHAI, NGSINH, PHUCAP, DT,
-                                              VAITRO, DONVI, COSO, mode);
+                                              VAITRO, DONVI, COSO, mode, MANSList, MACSList);
             screen.ShowDialog();
             GetNhanSu(_currentPage, _rowsPerPage);
         }
@@ -368,19 +421,19 @@ namespace AdminMonitor.TRUONGKHOA
 
 
                 OracleDataReader datareader = query.ExecuteReader();
-                svDT = new DataTable();
-                svDT.Load(datareader);
+                dkDT = new DataTable();
+                dkDT.Load(datareader);
                 if (totalItems == -1 && svDT.Rows.Count > 0)
                 {
-                    totalItems = int.Parse(svDT.Rows[0]["TotalDangKy"].ToString());
+                    totalItems = int.Parse(dkDT.Rows[0]["TotalDangKy"].ToString());
                     totalPages = (totalItems / rowsPerPage);
                     if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
                     else totalPages = (int)(totalItems / rowsPerPage) + 1;
                 }
 
 
-                svDT.Columns.Remove("TotalDangKy");
-                dataGridView.ItemsSource = svDT.DefaultView;
+                dkDT.Columns.Remove("TotalDangKy");
+                dataGridView.ItemsSource = dkDT.DefaultView;
                 DisplayMode = "DangKy";
 
                 PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";

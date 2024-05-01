@@ -119,7 +119,21 @@ namespace AdminMonitor.TRUONGDONVI
         {
             string mode = "Add";
             string role = "TruongDonVi";
-            var screen = new QuanLyDataPHANCONG(_con, null, null, 0, 0, null, mode, role);
+            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAGVList.Contains((string)rows["MAGV"]))
+                    MAGVList.Add((string)rows["MAGV"]);
+            }
+
+            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAHPList.Contains((string)rows["MAHP"]))
+                    MAHPList.Add((string)rows["MAHP"]);
+            }
+
+            var screen = new QuanLyDataPHANCONG(_con, null, null, 0, 0, null, mode, role, MAGVList, MAHPList);
             screen.ShowDialog();
             GetPHANCONGInfor(_currentPage, _rowsPerPage);
         }
@@ -134,7 +148,21 @@ namespace AdminMonitor.TRUONGDONVI
             string MACT = (string)row.Row.ItemArray[4];
             string mode = "Update";
             string role = "TruongDonVi";
-            var screen = new QuanLyDataPHANCONG(_con, MAGV, MAHP, HK, NAM, MACT, mode, role);
+            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAGVList.Contains((string)rows["MAGV"]))
+                    MAGVList.Add((string)rows["MAGV"]);
+            }
+
+            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
+            foreach (DataRow rows in pcDT.Rows)
+            {
+                if (!MAHPList.Contains((string)rows["MAHP"]))
+                    MAHPList.Add((string)rows["MAHP"]);
+            }
+
+            var screen = new QuanLyDataPHANCONG(_con, null, null, 0, 0, null, mode, role, MAGVList, MAHPList);
             screen.ShowDialog();
             GetPHANCONGInfor(_currentPage, _rowsPerPage);
         }

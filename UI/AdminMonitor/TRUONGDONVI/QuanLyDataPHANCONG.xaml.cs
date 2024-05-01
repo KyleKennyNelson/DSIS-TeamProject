@@ -18,6 +18,8 @@ namespace AdminMonitor.TRUONGDONVI
         OracleConnection _Conn;
 
         private string _mode;
+        private List<string> _MaGVList;
+        private List<string> _MaHPList;
 
         private string _MaGV;
         private string _MaHP;
@@ -32,7 +34,7 @@ namespace AdminMonitor.TRUONGDONVI
         private decimal _newNam;
         private string _newMaCT;
         public QuanLyDataPHANCONG(OracleConnection connection, string MaGV, string MaHP,
-                                    decimal HK, decimal Nam, string MaCT, string mode, string role)
+                                    decimal HK, decimal Nam, string MaCT, string mode, string role, List<string>MaGVList, List<string>MaHPList)
         {
             InitializeComponent();
             _Conn = connection;
@@ -44,6 +46,8 @@ namespace AdminMonitor.TRUONGDONVI
             _Nam = Nam;
             _MaCT = MaCT;
             _role = role;
+            _MaGVList = MaGVList;
+            _MaHPList = MaHPList;
         }
 
         private async void QuanLyDataPHANCONG_Loaded(object sender, RoutedEventArgs e)
@@ -58,10 +62,8 @@ namespace AdminMonitor.TRUONGDONVI
             if (_mode == "Update")
             {
                 ConfirmButton.Content = _mode;
-                NewMaGVBox.Text = _MaGV;
-
-                NewMaHPBox.Text = _MaHP;
-                NewMaHPBox.IsReadOnly = true;
+                NewMaGVComboBox.ItemsSource = _MaGVList;
+                NewMaHPComboBox.ItemsSource = _MaHPList;
 
                 NewHKBox.Text = _HK.ToString();
                 NewHKBox.IsReadOnly = true;
@@ -73,7 +75,11 @@ namespace AdminMonitor.TRUONGDONVI
                 NewMaCTBox.IsReadOnly = true;
             }
             else if (_mode == "Add")
+            {
                 ConfirmButton.Content = _mode;
+                NewMaGVComboBox.ItemsSource = _MaGVList;
+                NewMaGVComboBox.ItemsSource = _MaGVList;
+            }
 
             await Task.Run(() => Thread.Sleep(25));
             loadingProgressBar.Value = 80;
@@ -90,31 +96,14 @@ namespace AdminMonitor.TRUONGDONVI
             DialogResult = false;
         }
 
-        private void NewMaGVBox_TextChanged(object sender, EventArgs e)
+        private void NewMaGVComboBox_SelectionChanged(object sender, EventArgs e)
         {
-            try
-            {
-                
-                _newMaGV = NewMaGVBox.Text;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            _newMaGV = (string)NewMaGVComboBox.SelectedItem;
         }
 
-        private void NewMaHPBox_TextChanged(object sender, EventArgs e)
+        private void NewMaHPComboBox_SelectionChanged(object sender, EventArgs e)
         {
-            try
-            {
-                _newMaHP = NewMaHPBox.Text;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            _newMaHP = (string)NewMaHPComboBox.SelectedItem;
         }
         private void NewHKBox_TextChanged(object sender, EventArgs e)
         {
@@ -228,34 +217,53 @@ namespace AdminMonitor.TRUONGDONVI
                         {
                             _Conn.Open();
                         }
-                        OracleCommand query = _Conn.CreateCommand();
-                        query.BindByName = true;
+                        OracleCommand query1 = _Conn.CreateCommand();
+                        query1.BindByName = true;
+                        OracleCommand query2 = _Conn.CreateCommand();
+                        query2.BindByName = true;
 
                         if (_role == "TruongKhoa")
                         {
-                            query.CommandText = """
+                            query1.CommandText = """
                                                     INSERT INTO admin.UV_TRGKHOA_PHANCONG(MAGV, MAHP, HK, NAM, MACT)
                                                     values(:magv, :mahp, :hk, :nam, :mact)
                                                 """;
+
+                            query2.CommandText = """
+                                                    INSERT INTO admin.UV_TRGKHOA_PHANCONG(MAGV, MAHP, HK, NAM, MACT)
+                                                    values(:magv, :mahp, :hk, :nam, :mact)
+                                                 """;
                         }
                         else if (_role == "TruongDonVi")
                         {
-                            query.CommandText = """
+                            query1.CommandText = """
+                                                    INSERT INTO ADMIN.PROJECT_KHMO (MAHP,HK,NAM,MACT)
+                                                    VALUES(:mahp, :hk, :nam, :mact)
+                                                 """;
+
+                            query2.CommandText = """
                                                     INSERT INTO admin.UV_TRGDONVI_PHANCONG(MAGV, MAHP, HK, NAM, MACT)
                                                     values(:magv, :mahp, :hk, :nam, :mact)
-                                                """;
+                                                 """;
                         }
                         
-                        query.CommandType = CommandType.Text;
-                        query.Parameters.Add(new OracleParameter(":magv", _newMaGV));
-                        query.Parameters.Add(new OracleParameter(":mahp", _newMaHP));
-                        query.Parameters.Add(new OracleParameter(":hk", _newHK));
-                        query.Parameters.Add(new OracleParameter(":nam", _newNam));
-                        query.Parameters.Add(new OracleParameter(":mact", _newMaCT));
+                        query1.CommandType = CommandType.Text;
+                        query1.Parameters.Add(new OracleParameter(":mahp", _newMaHP));
+                        query1.Parameters.Add(new OracleParameter(":hk", _newHK));
+                        query1.Parameters.Add(new OracleParameter(":nam", _newNam));
+                        query1.Parameters.Add(new OracleParameter(":mact", _newMaCT));
+
+                        query2.CommandType = CommandType.Text;
+                        query2.Parameters.Add(new OracleParameter(":magv", _newMaGV));
+                        query2.Parameters.Add(new OracleParameter(":mahp", _newMaHP));
+                        query2.Parameters.Add(new OracleParameter(":hk", _newHK));
+                        query2.Parameters.Add(new OracleParameter(":nam", _newNam));
+                        query2.Parameters.Add(new OracleParameter(":mact", _newMaCT));
 
                         try
                         {
-                            query.ExecuteNonQuery();
+                            query1.ExecuteNonQuery();
+                            query2.ExecuteNonQuery();
                         }
                         catch (Exception ex)
                         {
