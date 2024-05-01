@@ -5,6 +5,7 @@ ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE;
 
 --NHU MOT NGUOI DUNG CO VAI TRO GIANG VIEN
 grant GIANGVIEN to TRGKHOA;
+grant NVCOBAN to TRGKHOA;
 grant connect to TRGKHOA;
 
 --TAO VIEW TREN QUAN HE PHAN CONG DOI VOI CAC HOC PHAN QUAN LY BOI DON VI VAN PHONG KHOA
@@ -24,6 +25,29 @@ grant SELECT, INSERT, DELETE, UPDATE on ADMIN.PROJECT_NHANSU to TRGKHOA;
 
 --XEM TAT CA CAC BANG
 grant select any table to TRGKHOA;
+declare
+    cursor cur_TRGDONVI is (select * from ADMIN.PROJECT_NHANSU where VAITRO = 'TRGKHOA');
+    STRSQL varchar2(1000);
+begin
+    for row_TRGDONVI in cur_TRGDONVI
+    loop
+        STRSQL := 'CREATE USER ' || row_TRGDONVI.MANV || ' identified by 123';
+        EXECUTE IMMEDIATE (STRSQL);
+        STRSQL := 'GRANT TRGKHOA to ' || row_TRGDONVI.MANV;
+        EXECUTE IMMEDIATE (STRSQL);
+        STRSQL := 'GRANT CONNECT to ' || row_TRGDONVI.MANV;
+        EXECUTE IMMEDIATE (STRSQL);
+    end loop;
+end;
 
-create user NV003 identified by 123;
-grant TRGKHOA to NV003;
+declare
+    cursor cur_TRGDONVI is (select * from ADMIN.PROJECT_NHANSU where VAITRO = 'TRGKHOA');
+    STRSQL varchar2(1000);
+begin
+    for row_TRGDONVI in cur_TRGDONVI
+    loop
+        STRSQL := 'DROP USER ' || row_TRGDONVI.MANV;
+        EXECUTE IMMEDIATE (STRSQL);
+    end loop;
+end;
+

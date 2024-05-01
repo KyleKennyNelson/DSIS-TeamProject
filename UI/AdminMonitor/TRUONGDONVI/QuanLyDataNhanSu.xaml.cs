@@ -2,51 +2,67 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace AdminMonitor.TRUONGDONVI
 {
     /// <summary>
-    /// Interaction logic for QuanLyDataPHANCONG.xaml
+    /// Interaction logic for QuanLyDataNhanSu.xaml
     /// </summary>
-    public partial class QuanLyDataPHANCONG : Window
+    public partial class QuanLyDataNhanSu : Window
     {
         OracleConnection _Conn;
-
         private string _mode;
 
-        private string _MaGV;
-        private string _MaHP;
-        private decimal _HK;
-        private decimal _Nam;
-        private string _MaCT;
-        private string _role;
+        private string _MaNV;
+        private string _Hoten;
+        private string _Phai;
+        private DateTime _NgaySinh;
+        private int _PhuCap;
+        private string _DT;
+        private string _VaiTro;
+        private string _DonVi;
+        private string _CoSo;
 
-        private string _newMaGV;
-        private string _newMaHP;
-        private decimal _newHK;
-        private decimal _newNam;
-        private string _newMaCT;
-        public QuanLyDataPHANCONG(OracleConnection connection, string MaGV, string MaHP,
-                                    decimal HK, decimal Nam, string MaCT, string mode, string role)
+        private string _newMaNV;
+        private string _newHoten;
+        private string _newPhai;
+        private DateTime _newNgaySinh;
+        private int _newPhuCap;
+        private string _newDT;
+        private string _newVaiTro;
+        private string _newDonVi;
+        private string _newCoSo;
+        public QuanLyDataNhanSu(OracleConnection connection, string MaNV, string Hoten, string Phai, DateTime NgaySinh,
+                                int PhuCap, string DT, string VaiTro, string DonVi, string CoSo, string mode)
         {
             InitializeComponent();
             _Conn = connection;
             _mode = mode;
-
-            _MaGV = MaGV;
-            _MaHP = MaHP;
-            _HK = HK;
-            _Nam = Nam;
-            _MaCT = MaCT;
-            _role = role;
+            _MaNV = MaNV;
+            _Hoten = Hoten;
+            _Phai = Phai;
+            _NgaySinh = NgaySinh;
+            _PhuCap = PhuCap;
+            _DT = DT;
+            _VaiTro = VaiTro;
+            _DonVi = DonVi;
+            _CoSo = CoSo;
         }
 
-        private async void QuanLyDataPHANCONG_Loaded(object sender, RoutedEventArgs e)
+        private async void QuanLyDataNhanSu_Loaded(object sender, RoutedEventArgs e)
         {
             CancelButton.IsEnabled = false;
             ConfirmButton.IsEnabled = false;
@@ -58,19 +74,35 @@ namespace AdminMonitor.TRUONGDONVI
             if (_mode == "Update")
             {
                 ConfirmButton.Content = _mode;
-                NewMaGVBox.Text = _MaGV;
+                NewMaNVBox.Text = _MaNV;
+                NewMaNVBox.IsReadOnly = true;
 
-                NewMaHPBox.Text = _MaHP;
-                NewMaHPBox.IsReadOnly = true;
+                NewHoTenBox.Text = _Hoten;
+                NewHoTenBox.IsReadOnly = true;
 
-                NewHKBox.Text = _HK.ToString();
-                NewHKBox.IsReadOnly = true;
+                NewPhaiBox.Text = _Phai;
+                NewPhaiBox.IsReadOnly = true;
 
-                NewNamBox.Text = _Nam.ToString();
-                NewNamBox.IsReadOnly = true;
+                NewNgaySinhBox.Text = _NgaySinh.ToString("dd/MM/yyyy");
+                NewNgaySinhBox.IsReadOnly = true;
 
-                NewMaCTBox.Text = _MaCT;
-                NewMaCTBox.IsReadOnly = true;
+                NewNgaySinhBox.Text = _NgaySinh.ToString("dd/MM/yyyy");
+                NewNgaySinhBox.IsReadOnly = true;
+
+                NewPhuCapBox.Text = _PhuCap.ToString();
+                //NewPhuCapBox.IsReadOnly = true;
+
+                NewDTBox.Text = _DT;
+                NewDTBox.IsReadOnly = true;
+
+                NewVaiTroBox.Text = _VaiTro;
+                NewVaiTroBox.IsReadOnly = true;
+
+                NewDonViBox.Text = _DonVi;
+                //NewDonViBox.IsReadOnly = true;
+
+                NewCoSoBox.Text = _CoSo;
+                //NewCoSoBox.IsReadOnly = true;
             }
             else if (_mode == "Add")
                 ConfirmButton.Content = _mode;
@@ -90,12 +122,16 @@ namespace AdminMonitor.TRUONGDONVI
             DialogResult = false;
         }
 
-        private void NewMaGVBox_TextChanged(object sender, EventArgs e)
+        private void NewDTBox_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                
-                _newMaGV = NewMaGVBox.Text;
+                string phonenumber = NewDTBox.Text;
+                var r = new Regex("^\\d(\\d|(?<!-)-)*\\d$|^\\d$");
+                if (r.IsMatch(phonenumber))
+                    _newDT = phonenumber;
+                else
+                    MessageBox.Show("Input Wrong format for phone number", "Failed");
             }
             catch (Exception ex)
             {
@@ -104,35 +140,11 @@ namespace AdminMonitor.TRUONGDONVI
             }
         }
 
-        private void NewMaHPBox_TextChanged(object sender, EventArgs e)
+        private void NewPhuCapBox_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                _newMaHP = NewMaHPBox.Text;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-        }
-        private void NewHKBox_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                _newHK = Convert.ToInt32(NewHKBox.Text);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-        }
-        private void NewNamBox_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                _newNam = Convert.ToInt32(NewNamBox.Text);
+                _newPhuCap = Convert.ToInt32(NewPhuCapBox.Text);
             }
             catch (Exception ex)
             {
@@ -141,11 +153,27 @@ namespace AdminMonitor.TRUONGDONVI
             }
         }
 
-        private void NewMaCTBox_TextChanged(object sender, EventArgs e)
+
+        private void NewDonViBox_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                _newMaCT = NewMaCTBox.Text;
+
+                _newDonVi = NewDonViBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private void NewCoSoBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+
+                _newCoSo = NewCoSoBox.Text;
             }
             catch (Exception ex)
             {
@@ -174,42 +202,22 @@ namespace AdminMonitor.TRUONGDONVI
                         {
                             _Conn.Open();
                         }
-                        if (_newMaGV != _MaGV)
+                        if (_newPhuCap != _PhuCap || _newDonVi != _DonVi || _newCoSo != _CoSo)
                         {
                             OracleCommand query = _Conn.CreateCommand();
                             query.BindByName = true;
-                            if (_role == "TruongKhoa")
-                            {
-                                query.CommandText = """
-                                                    UPDATE admin.UV_TRGKHOA_PHANCONG
-                                                    SET MAGV = :newmagv
-                                                    WHERE MAGV = :magv
-                                                        and MAHP = :mahp
-                                                        and HK = :hk
-                                                        and NAM = :nam
-                                                        and MACT = :mact
-                                                 """;
-                            }
-                            else if (_role == "TruongDonVi")
-                            {
-                                query.CommandText = """
-                                                    UPDATE admin.UV_TRGDONVI_PHANCONG
-                                                    SET MAGV = :newmagv
-                                                    WHERE MAGV = :magv
-                                                        and MAHP = :mahp
-                                                        and HK = :hk
-                                                        and NAM = :nam
-                                                        and MACT = :mact
-                                                 """;
-                            }
+                            query.CommandText = """
+                                                    UPDATE admin.PROJECT_NHANSU
+                                                    SET PHUCAP = :newphucap, DONVI = :newdonvi, 
+                                                        COSO = :newcoso
+                                                    WHERE MANV = :manv
+                                                """;
                             
                             query.CommandType = CommandType.Text;
-                            query.Parameters.Add(new OracleParameter(":newmagv", _newMaGV));
-                            query.Parameters.Add(new OracleParameter(":magv", _MaGV));
-                            query.Parameters.Add(new OracleParameter(":mahp", _MaHP));
-                            query.Parameters.Add(new OracleParameter(":hk", Convert.ToInt32(_HK)));
-                            query.Parameters.Add(new OracleParameter(":nam", Convert.ToInt32(_Nam)));
-                            query.Parameters.Add(new OracleParameter(":mact", _MaCT));
+                            query.Parameters.Add(new OracleParameter(":newphucap", _newPhuCap));
+                            query.Parameters.Add(new OracleParameter(":newdonvi", _newDonVi));
+                            query.Parameters.Add(new OracleParameter(":newcoso", _newCoSo));
+                            query.Parameters.Add(new OracleParameter(":manv", _MaNV));
 
                             try
                             {
@@ -231,27 +239,22 @@ namespace AdminMonitor.TRUONGDONVI
                         OracleCommand query = _Conn.CreateCommand();
                         query.BindByName = true;
 
-                        if (_role == "TruongKhoa")
-                        {
-                            query.CommandText = """
-                                                    INSERT INTO admin.UV_TRGKHOA_PHANCONG(MAGV, MAHP, HK, NAM, MACT)
-                                                    values(:magv, :mahp, :hk, :nam, :mact)
-                                                """;
-                        }
-                        else if (_role == "TruongDonVi")
-                        {
-                            query.CommandText = """
-                                                    INSERT INTO admin.UV_TRGDONVI_PHANCONG(MAGV, MAHP, HK, NAM, MACT)
-                                                    values(:magv, :mahp, :hk, :nam, :mact)
-                                                """;
-                        }
-                        
+                        query.CommandText = """
+                                                INSERT INTO admin.PROJECT_NHANSU(MANV,HOTEN,PHAI,NGSINH,PHUCAP,
+                                                                                DT,VAITRO,DONVI,COSO)
+                                                values(:manv, :hoten, :phai, :ngsinh, :phucap, dt, vaitro, donvi, coso)
+                                            """;
+
                         query.CommandType = CommandType.Text;
-                        query.Parameters.Add(new OracleParameter(":magv", _newMaGV));
-                        query.Parameters.Add(new OracleParameter(":mahp", _newMaHP));
-                        query.Parameters.Add(new OracleParameter(":hk", _newHK));
-                        query.Parameters.Add(new OracleParameter(":nam", _newNam));
-                        query.Parameters.Add(new OracleParameter(":mact", _newMaCT));
+                        query.Parameters.Add(new OracleParameter(":manv", NewMaNVBox.Text));
+                        query.Parameters.Add(new OracleParameter(":hoten", NewHoTenBox.Text));
+                        query.Parameters.Add(new OracleParameter(":phai", NewPhaiBox.Text));
+                        query.Parameters.Add(new OracleParameter(":ngsinh", Convert.ToDateTime(NewNgaySinhBox.Text)));
+                        query.Parameters.Add(new OracleParameter(":phucap", _newPhuCap));
+                        query.Parameters.Add(new OracleParameter(":dt", _newDT));
+                        query.Parameters.Add(new OracleParameter(":vaitro", NewVaiTroBox.Text));
+                        query.Parameters.Add(new OracleParameter(":donvi", _newDonVi));
+                        query.Parameters.Add(new OracleParameter(":coso", _newCoSo));
 
                         try
                         {

@@ -5,6 +5,7 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -107,6 +108,70 @@ namespace AdminMonitor.TRUONGKHOA
             }
         }
 
+        private void AddPhanCong_Click(object sender, RoutedEventArgs e)
+        {
+            string mode = "Add";
+            string role = "TruongKhoa";
+            var screen = new QuanLyDataPHANCONG(con, null, null, 0, 0, null, mode, role);
+            screen.ShowDialog();
+            GetPHANCONGInfor();
+        }
+
+        private void UpdatePhanCong_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView row = (DataRowView)dataGridViewPHANCONGInfor.SelectedItems[0];
+            string MAGV = (string)row.Row.ItemArray[0];
+            string MAHP = (string)row.Row.ItemArray[1];
+            decimal HK = (decimal)row.Row.ItemArray[2];
+            decimal NAM = (decimal)row.Row.ItemArray[3];
+            string MACT = (string)row.Row.ItemArray[4];
+            string mode = "Update";
+            string role = "TruongKhoa";
+            var screen = new QuanLyDataPHANCONG(con, MAGV, MAHP, HK, NAM, MACT, mode, role);
+            screen.ShowDialog();
+            GetPHANCONGInfor();
+        }
+
+
+        private void DeletePhanCong_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView row = (DataRowView)dataGridViewPHANCONGInfor.SelectedItems[0];
+            string MAGV = (string)row.Row.ItemArray[0];
+            string MAHP = (string)row.Row.ItemArray[1];
+            decimal HK = (decimal)row.Row.ItemArray[2];
+            decimal NAM = (decimal)row.Row.ItemArray[3];
+            string MACT = (string)row.Row.ItemArray[4];
+
+
+            OracleCommand query = con.CreateCommand();
+            query.CommandText = """
+                                    DELETE FROM admin.UV_TRGKHOA_PHANCONG
+                                    WHERE MAGV = :magv
+                                        and MAHP = :mahp
+                                        and HK = :hk
+                                        and NAM = :nam
+                                        and MACT = :mact
+                                """;
+            query.CommandType = CommandType.Text;
+            query.Parameters.Add(new OracleParameter(":magv", MAGV));
+            query.Parameters.Add(new OracleParameter(":mahp", MAHP));
+            query.Parameters.Add(new OracleParameter(":hk", Convert.ToInt32(HK)));
+            query.Parameters.Add(new OracleParameter(":nam", Convert.ToInt32(NAM)));
+            query.Parameters.Add(new OracleParameter(":mact", MACT));
+
+            try
+            {
+                query.ExecuteNonQuery();
+                GetPHANCONGInfor();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                DialogResult = false;
+                return;
+            }
+        }
+
         private void ChangePhoneNumbContextItem_Click(object sender, RoutedEventArgs e)
         {
             EditPhoneNumber screen = new EditPhoneNumber(con, _name);
@@ -128,7 +193,149 @@ namespace AdminMonitor.TRUONGKHOA
             MATDVLabel.Content = _name;
             rowPerPageOptionsComboBox.ItemsSource = rowPerPageOptions;
             rowPerPageOptionsComboBox.SelectedIndex = 1;
-            ViewDangKyRadioButton.IsChecked = true;
+            ViewNhanSuRadioButton.IsChecked = true;
+        }
+
+        private void GetNhanSu(int page, int rowsPerPage)
+        {
+            try
+            {
+                int skip = (page - 1) * rowsPerPage;
+                int take = rowsPerPage;
+
+                OracleCommand query = con.CreateCommand();
+                query.CommandText = """
+                                        SELECT MANV, HOTEN, PHAI, NGSINH, PHUCAP, DT, VAITRO,
+                                        DONVI, COSO, count(*) over() as "TotalNhanSu"
+                                        FROM admin.Project_NHANSU
+                                        order by MANV
+                                        offset :Skip rows 
+                                        fetch next :Take rows only
+                                    """;
+
+
+                query.CommandType = CommandType.Text;
+                query.Parameters.Add(new OracleParameter("Skip", skip));
+                query.Parameters.Add(new OracleParameter("Take", take));
+
+
+                OracleDataReader datareader = query.ExecuteReader();
+                svDT = new DataTable();
+                svDT.Load(datareader);
+                if (totalItems == -1 && svDT.Rows.Count > 0)
+                {
+                    totalItems = int.Parse(svDT.Rows[0]["TotalNhanSu"].ToString());
+                    totalPages = (totalItems / rowsPerPage);
+                    if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
+                    else totalPages = (int)(totalItems / rowsPerPage) + 1;
+                }
+
+
+                svDT.Columns.Remove("TotalNhanSu");
+                dataGridView.ItemsSource = svDT.DefaultView;
+                DisplayMode = "NhanSu";
+
+                PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";
+                TotalItemDisplayTextBox.Text = $" of {totalItems} item(s).";
+
+                if (_currentPage == totalPages)
+                {
+                    NextButton.IsEnabled = false;
+                }
+                else
+                {
+                    NextButton.IsEnabled = true;
+                }
+
+                if (_currentPage == 1)
+                {
+                    PrevButton.IsEnabled = false;
+                }
+                else
+                {
+                    PrevButton.IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
+        }
+
+        private void getNhanSuButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentPage = 1;
+            totalItems = -1;
+            GetNhanSu(_currentPage, _rowsPerPage);
+            CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
+            ThemDuLieuNhanSuContextItem.IsEnabled = true;
+            XoaDuLieuNhanSuContextItem.IsEnabled = true;
+            CapNhatDuLieuNhanSuContextItem.IsEnabled = true;
+        }
+
+        private void ThemDuLieuNhanSu_Click(object sender, RoutedEventArgs e)
+        {
+            string mode = "Add";
+            var screen = new QuanLyDataNhanSu(con, null, null, null, DateTime.Now, 0, null, null, null, null, mode);
+            screen.ShowDialog();
+            GetNhanSu(_currentPage, _rowsPerPage);
+        }
+
+        private void CapNhatDuLieuNhanSu_Click(object sender, RoutedEventArgs e)
+        {
+            string mode = "Update";
+            DataRowView row = (DataRowView)dataGridView.SelectedItems[0];
+            string MANV = (string)row.Row.ItemArray[0];
+            string HOTEN = (string)row.Row.ItemArray[1];
+            string PHAI = (string)row.Row.ItemArray[2];
+            DateTime NGSINH = (DateTime)row.Row.ItemArray[3];
+            int PHUCAP = Convert.ToInt32((decimal)row.Row.ItemArray[4]);
+            string DT = (string)row.Row.ItemArray[5];
+            string VAITRO = (string)row.Row.ItemArray[6];
+            string DONVI = (string)row.Row.ItemArray[7];
+            string COSO = (string)row.Row.ItemArray[8];
+
+            var screen = new QuanLyDataNhanSu(con, MANV, HOTEN, PHAI, NGSINH, PHUCAP, DT,
+                                              VAITRO, DONVI, COSO, mode);
+            screen.ShowDialog();
+            GetNhanSu(_currentPage, _rowsPerPage);
+        }
+
+
+        private void XoaDuLieuNhanSu_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView row = (DataRowView)dataGridView.SelectedItems[0];
+            string MANV = (string)row.Row.ItemArray[0];
+            //string HOTEN = (string)row.Row.ItemArray[1];
+            //string PHAI = (string)row.Row.ItemArray[2];
+            //DateTime NGSINH = (DateTime)row.Row.ItemArray[3];
+            //int PHUCAP = Convert.ToInt32((decimal)row.Row.ItemArray[4]);
+            //string DT = (string)row.Row.ItemArray[5];
+            //string VAITRO = (string)row.Row.ItemArray[6];
+            //string DONVI = (string)row.Row.ItemArray[7];
+            //string COSO = (string)row.Row.ItemArray[8];
+
+
+            OracleCommand query = con.CreateCommand();
+            query.CommandText = """
+                                    DELETE FROM admin.PROJECT_NHANSU
+                                    WHERE MANV = :manv
+                                """;
+            query.CommandType = CommandType.Text;
+            query.Parameters.Add(new OracleParameter(":manv", MANV));
+
+            try
+            {
+                query.ExecuteNonQuery();
+                GetNhanSu(_currentPage, _rowsPerPage);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                DialogResult = false;
+                return;
+            }
         }
 
         private void GetDangKy(int page, int rowsPerPage)
@@ -141,7 +348,7 @@ namespace AdminMonitor.TRUONGKHOA
                 OracleCommand query = con.CreateCommand();
                 query.CommandText = """
                                         SELECT MASV, MAHP, HK, NAM, MACT, DIEMTH, DIEMQT, 
-                                        DIEMCK, DIEMTK, count(*) over() as "TotalSinhVien"
+                                        DIEMCK, DIEMTK, count(*) over() as "TotalDangKy"
                                         FROM admin.PROJECT_DANGKI
                                         order by MASV
                                         offset :Skip rows 
@@ -159,14 +366,14 @@ namespace AdminMonitor.TRUONGKHOA
                 svDT.Load(datareader);
                 if (totalItems == -1 && svDT.Rows.Count > 0)
                 {
-                    totalItems = int.Parse(svDT.Rows[0]["TotalSinhVien"].ToString());
+                    totalItems = int.Parse(svDT.Rows[0]["TotalDangKy"].ToString());
                     totalPages = (totalItems / rowsPerPage);
                     if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
                     else totalPages = (int)(totalItems / rowsPerPage) + 1;
                 }
 
 
-                svDT.Columns.Remove("TotalSinhVien");
+                svDT.Columns.Remove("TotalDangKy");
                 dataGridView.ItemsSource = svDT.DefaultView;
                 DisplayMode = "DangKy";
 
@@ -203,6 +410,10 @@ namespace AdminMonitor.TRUONGKHOA
             _currentPage = 1;
             totalItems = -1;
             GetDangKy(_currentPage, _rowsPerPage);
+            CapNhatDuLieuSinhVienContextItem.IsEnabled = true;
+            ThemDuLieuNhanSuContextItem.IsEnabled = false;
+            XoaDuLieuNhanSuContextItem.IsEnabled = false;
+            CapNhatDuLieuNhanSuContextItem.IsEnabled = false;
         }
 
         private void CapNhatDuLieuSinhVien_Click(object sender, RoutedEventArgs e)
@@ -234,7 +445,7 @@ namespace AdminMonitor.TRUONGKHOA
                                         MANGANH, SOTCTL, DTBTL, count(*) over() as "TotalSinhVien"
                                         from ADMIN.PROJECT_SINHVIEN
                                         order by MASV
-                                        offset :Skip rows 
+                                        offset :Skip rows
                                         fetch next :Take rows only
                                     """;
 
@@ -294,6 +505,9 @@ namespace AdminMonitor.TRUONGKHOA
             totalItems = -1;
             GetSinhVien(_currentPage, _rowsPerPage);
             CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
+            ThemDuLieuNhanSuContextItem.IsEnabled = false;
+            XoaDuLieuNhanSuContextItem.IsEnabled = false;
+            CapNhatDuLieuNhanSuContextItem.IsEnabled = false;
         }
 
         private void GetDonVi(int page, int rowsPerPage)
@@ -369,6 +583,9 @@ namespace AdminMonitor.TRUONGKHOA
             totalItems = -1;
             GetDonVi(_currentPage, _rowsPerPage);
             CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
+            ThemDuLieuNhanSuContextItem.IsEnabled = false;
+            XoaDuLieuNhanSuContextItem.IsEnabled = false;
+            CapNhatDuLieuNhanSuContextItem.IsEnabled = false;
         }
 
         private void GetHocPhan(int page, int rowsPerPage)
@@ -444,6 +661,9 @@ namespace AdminMonitor.TRUONGKHOA
             totalItems = -1;
             GetHocPhan(_currentPage, _rowsPerPage);
             CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
+            ThemDuLieuNhanSuContextItem.IsEnabled = false;
+            XoaDuLieuNhanSuContextItem.IsEnabled = false;
+            CapNhatDuLieuNhanSuContextItem.IsEnabled = false;
         }
 
         private void GetKHMo(int page, int rowsPerPage)
@@ -519,6 +739,87 @@ namespace AdminMonitor.TRUONGKHOA
             totalItems = -1;
             GetKHMo(_currentPage, _rowsPerPage);
             CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
+            ThemDuLieuNhanSuContextItem.IsEnabled = false;
+            XoaDuLieuNhanSuContextItem.IsEnabled = false;
+            CapNhatDuLieuNhanSuContextItem.IsEnabled = false;
+        }
+
+        private void GetPhanCong(int page, int rowsPerPage)
+        {
+            try
+            {
+                int skip = (page - 1) * rowsPerPage;
+                int take = rowsPerPage;
+
+                OracleCommand query = con.CreateCommand();
+                query.CommandText = """
+                                        select MAGV, MAHP, HK, NAM, MACT,
+                                        count(*) over() as "TotalPhanCong"
+                                        from ADMIN.Project_PHANCONG
+                                        order by MAGV, MAHP, NAM, HK
+                                        offset :Skip rows 
+                                        fetch next :Take rows only
+                                    """;
+
+
+                query.CommandType = CommandType.Text;
+                query.Parameters.Add(new OracleParameter("Skip", skip));
+                query.Parameters.Add(new OracleParameter("Take", take));
+
+
+                OracleDataReader datareader = query.ExecuteReader();
+                khmDT = new DataTable();
+                khmDT.Load(datareader);
+                if (totalItems == -1 && khmDT.Rows.Count > 0)
+                {
+                    totalItems = int.Parse(khmDT.Rows[0]["TotalPhanCong"].ToString());
+                    totalPages = (totalItems / rowsPerPage);
+                    if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
+                    else totalPages = (int)(totalItems / rowsPerPage) + 1;
+                }
+
+
+                khmDT.Columns.Remove("TotalPhanCong");
+                dataGridView.ItemsSource = khmDT.DefaultView;
+                DisplayMode = "NhanSu";
+
+                PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";
+                TotalItemDisplayTextBox.Text = $" of {totalItems} item(s).";
+
+                if (_currentPage == totalPages)
+                {
+                    NextButton.IsEnabled = false;
+                }
+                else
+                {
+                    NextButton.IsEnabled = true;
+                }
+
+                if (_currentPage == 1)
+                {
+                    PrevButton.IsEnabled = false;
+                }
+                else
+                {
+                    PrevButton.IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
+        }
+
+        private void getPhanCongButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentPage = 1;
+            totalItems = -1;
+            GetPhanCong(_currentPage, _rowsPerPage);
+            CapNhatDuLieuSinhVienContextItem.IsEnabled = false;
+            ThemDuLieuNhanSuContextItem.IsEnabled = false;
+            XoaDuLieuNhanSuContextItem.IsEnabled = false;
+            CapNhatDuLieuNhanSuContextItem.IsEnabled = false;
         }
 
         private void rowPerPageOptionsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -528,11 +829,11 @@ namespace AdminMonitor.TRUONGKHOA
 
             if (totalItems != -1)
             {
-                if (DisplayMode == "DangKy")
+                if (DisplayMode == "NhanSu")
                 {
-                    getDangKyButton_Click(sender, e);
+                    getNhanSuButton_Click(sender, e);
                 }
-                if (DisplayMode == "SinhVien")
+                else if (DisplayMode == "SinhVien")
                 {
                     getSinhVienButton_Click(sender, e);
                 }
@@ -548,6 +849,14 @@ namespace AdminMonitor.TRUONGKHOA
                 {
                     getKHMoButton_Click(sender, e);
                 }
+                else if (DisplayMode == "PhanCong")
+                {
+                    getPhanCongButton_Click(sender, e);
+                }
+                else if (DisplayMode == "DangKy")
+                {
+                    getDangKyButton_Click(sender, e);
+                }
             }
         }
 
@@ -556,11 +865,11 @@ namespace AdminMonitor.TRUONGKHOA
             if (_currentPage > 1)
             {
                 _currentPage--;
-                if (DisplayMode == "DangKy")
+                if (DisplayMode == "NhanSu")
                 {
-                    GetDangKy(_currentPage, _rowsPerPage);
+                    GetNhanSu(_currentPage, _rowsPerPage);
                 }
-                if (DisplayMode == "SinhVien")
+                else if (DisplayMode == "SinhVien")
                 {
                     GetSinhVien(_currentPage, _rowsPerPage);
                 }
@@ -575,6 +884,14 @@ namespace AdminMonitor.TRUONGKHOA
                 else if (DisplayMode == "KHMo")
                 {
                     GetKHMo(_currentPage, _rowsPerPage);
+                }
+                else if (DisplayMode == "PhanCong")
+                {
+                    GetPhanCong(_currentPage, _rowsPerPage);
+                }
+                else if (DisplayMode == "DangKy")
+                {
+                    GetDangKy(_currentPage, _rowsPerPage);
                 }
             }
         }
@@ -584,11 +901,11 @@ namespace AdminMonitor.TRUONGKHOA
             if (_currentPage < totalPages)
             {
                 _currentPage++;
-                if (DisplayMode == "DangKy")
+                if (DisplayMode == "NhanSu")
                 {
-                    GetDangKy(_currentPage, _rowsPerPage);
+                    GetNhanSu(_currentPage, _rowsPerPage);
                 }
-                if (DisplayMode == "SinhVien")
+                else if (DisplayMode == "SinhVien")
                 {
                     GetSinhVien(_currentPage, _rowsPerPage);
                 }
@@ -603,6 +920,14 @@ namespace AdminMonitor.TRUONGKHOA
                 else if (DisplayMode == "KHMo")
                 {
                     GetKHMo(_currentPage, _rowsPerPage);
+                }
+                else if (DisplayMode == "PhanCong")
+                {
+                    GetPhanCong(_currentPage, _rowsPerPage);
+                }
+                else if (DisplayMode == "DangKy")
+                {
+                    GetDangKy(_currentPage, _rowsPerPage);
                 }
             }
         }

@@ -53,21 +53,38 @@
                 </StackPanel>
                 <DataGrid Name="dataGridViewPHANCONGInfor" Grid.Column="0"
                       AutoGenerateColumns="True" SelectionMode="Single">
+                    <DataGrid.Resources>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <EventSetter Event="MouseDoubleClick" Handler="UpdatePhanCong_Click"/>
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add" Click="AddPhanCong_Click"/>
+                            <MenuItem Header="Update" Click="UpdatePhanCong_Click"/>
+                            <MenuItem Header="Delete" Click="DeletePhanCong_Click"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                 </DataGrid>
             </Grid>
         </StackPanel>
 
         <StackPanel Grid.Row="3" VerticalAlignment="Center" Orientation="Horizontal">
-            <RadioButton x:Name="ViewDangKyRadioButton" Content="View DangKy" 
-             Checked="getDangKyButton_Click"/>
-            <RadioButton x:Name="ViewSinhVienRadioButton" Content="View SinhVien" 
+            <RadioButton x:Name="ViewNhanSuRadioButton" Content="NhanSu" 
+             Checked="getNhanSuButton_Click"/>
+            <RadioButton x:Name="ViewSinhVienRadioButton" Content="SinhVien" 
              Checked="getSinhVienButton_Click" Margin="10,0,0,0"/>
-            <RadioButton x:Name="ViewDonViRadioButton" Content="View DonVi"
+            <RadioButton x:Name="ViewDonViRadioButton" Content="DonVi"
              Checked="getDonViButton_Click" Margin="10,0,0,0"/>
-            <RadioButton x:Name="ViewHocPhanRadioButton" Content="View HocPhan"
+            <RadioButton x:Name="ViewHocPhanRadioButton" Content="HocPhan"
              Checked="getHocPhanButton_Click" Margin="10,0,0,0"/>
-            <RadioButton x:Name="ViewKHMoRadioButton" Content="View KHMo"
+            <RadioButton x:Name="ViewKHMoRadioButton" Content="KHMo"
              Checked="getKHMoButton_Click" Margin="10,0,0,0"/>
+            <RadioButton x:Name="ViewPhanCongRadioButton" Content="PhanCong" 
+             Checked="getPhanCongButton_Click" Margin="10,0,0,0"/>
+            <RadioButton x:Name="ViewDangKyRadioButton" Content="DangKy" 
+             Checked="getDangKyButton_Click" Margin="10,0,0,0"/>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" >
@@ -79,16 +96,16 @@
 
         <DataGrid Name="dataGridView" Grid.Row="4" AutoGenerateColumns="True" 
       FrozenColumnCount="2" SelectionMode="Single">
-            <DataGrid.Resources>
-                <Style TargetType="{x:Type DataGridCell}">
-                    <EventSetter Event="MouseDoubleClick" Handler="CapNhatDuLieuSinhVien_Click"/>
-                </Style>
-            </DataGrid.Resources>
-
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Edit data for SinhVien" Click="CapNhatDuLieuSinhVien_Click"
                       x:Name="CapNhatDuLieuSinhVienContextItem"/>
+                    <MenuItem Header="Insert data for NhanSu" Click="ThemDuLieuNhanSu_Click"
+                      x:Name="ThemDuLieuNhanSuContextItem"/>
+                    <MenuItem Header="Delete data for NhanSu" Click="XoaDuLieuNhanSu_Click"
+                      x:Name="XoaDuLieuNhanSuContextItem"/>
+                    <MenuItem Header="Update data for NhanSu" Click="CapNhatDuLieuNhanSu_Click"
+                      x:Name="CapNhatDuLieuNhanSuContextItem"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>

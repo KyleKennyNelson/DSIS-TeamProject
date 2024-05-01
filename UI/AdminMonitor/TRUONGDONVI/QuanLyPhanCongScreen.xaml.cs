@@ -115,11 +115,11 @@ namespace AdminMonitor.TRUONGDONVI
                 this.Close();
             }
         }
-
         private void AddPhanCong_Click(object sender, RoutedEventArgs e)
         {
             string mode = "Add";
-            var screen = new QuanLyDataPHANCONG(_con, null, null, 0, 0, null, mode);
+            string role = "TruongDonVi";
+            var screen = new QuanLyDataPHANCONG(_con, null, null, 0, 0, null, mode, role);
             screen.ShowDialog();
             GetPHANCONGInfor(_currentPage, _rowsPerPage);
         }
@@ -133,7 +133,8 @@ namespace AdminMonitor.TRUONGDONVI
             decimal NAM = (decimal)row.Row.ItemArray[3];
             string MACT = (string)row.Row.ItemArray[4];
             string mode = "Update";
-            var screen = new QuanLyDataPHANCONG(_con, MAGV, MAHP, HK, NAM, MACT, mode);
+            string role = "TruongDonVi";
+            var screen = new QuanLyDataPHANCONG(_con, MAGV, MAHP, HK, NAM, MACT, mode, role);
             screen.ShowDialog();
             GetPHANCONGInfor(_currentPage, _rowsPerPage);
         }
