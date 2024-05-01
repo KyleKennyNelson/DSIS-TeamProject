@@ -1,6 +1,8 @@
 ﻿using AdminMonitor.NVCOBAN;
 using AdminMonitor.SINHVIEN;
 using AdminMonitor.GIAOVIEN;
+using AdminMonitor.TRUONGDONVI;
+using AdminMonitor.TRUONGKHOA;
 using System.Windows;
 using AdminMonitor.GIAOVU;
 
@@ -60,8 +62,16 @@ namespace AdminMonitor
                             }
                             break;
                         case "TRGKHOA":
+                            if (username != null)
+                            {
+                                window = new TruongKhoaScreen(con);
+                            }
                             break;
                         case "TRGDONVI":
+                            if (username != null)
+                            {
+                                window = new TruongDonViScreen(con);
+                            }
                             break;
                         case "SINHVIEN":
                             if(username != null)

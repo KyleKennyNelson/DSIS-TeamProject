@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TRGDONVI\**" />
+    <EmbeddedResource Remove="TRGDONVI\**" />
+    <None Remove="TRGDONVI\**" />
+    <Page Remove="TRGDONVI\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="11993624801548336254-128.ico" />
   </ItemGroup>
 
@@ -23,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="GIANGVIEN\" />
-    <Folder Include="TRGDONVI\" />
   </ItemGroup>
 
 </Project>

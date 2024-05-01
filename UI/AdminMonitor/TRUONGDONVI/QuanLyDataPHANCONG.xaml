@@ -1,0 +1,71 @@
+﻿<Window x:Class="AdminMonitor.TRUONGDONVI.QuanLyDataPHANCONG"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="QuanLyDataPHANCONG" Height="200" Width="800"
+        Loaded="QuanLyDataPHANCONG_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Mã giáo viên" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            <Label Grid.Row="0" Grid.Column="1" Content="Mã học phần" HorizontalAlignment="Center" 
+               VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            <Label Grid.Row="0" Grid.Column="2" Content="Năm" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            <Label Grid.Row="0" Grid.Column="3" Content="Học kỳ" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+            <Label Grid.Row="0" Grid.Column="4" Content="Mã chương trình" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+
+
+            <TextBox x:Name="NewMaGVBox" Width="160" Grid.Row="1" Grid.Column="0"
+                 TextAlignment="Center" FontSize="15" TextChanged="NewMaGVBox_TextChanged"/>
+            <TextBox x:Name="NewMaHPBox" Width="160" Grid.Row="1" Grid.Column="1"
+                 TextAlignment="Center" FontSize="15" TextChanged="NewMaHPBox_TextChanged"/>
+            <TextBox x:Name="NewHKBox" Width="160" Grid.Row="1" Grid.Column="3"
+                 TextAlignment="Center" FontSize="15" TextChanged="NewHKBox_TextChanged"/>
+            <TextBox x:Name="NewNamBox" Width="160" Grid.Row="1" Grid.Column="2"
+                 TextAlignment="Center" FontSize="15" TextChanged="NewNamBox_TextChanged"/>
+            <TextBox x:Name="NewMaCTBox" Width="160" Grid.Row="1" Grid.Column="4"
+                 TextAlignment="Center" FontSize="15" TextChanged="NewMaCTBox_TextChanged"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="113*"/>
+                <ColumnDefinition Width="287*"/>
+                <ColumnDefinition Width="400*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="CancelButton" Content="Huỷ" Width="100" Height="30" 
+                FontWeight="Bold" FontSize="15" Click="CancelButton_Click" Grid.Column="1" Margin="37,12,150,12"/>
+            <Button x:Name="ConfirmButton" Width="100" Height="30" Grid.Column="2" 
+                FontWeight="Bold" FontSize="15" Click="ConfirmButton_Click" Margin="150,12,150,12"/>
+        </Grid>
+
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <ProgressBar x:Name="loadingProgressBar" Height="20" Width="150" IsIndeterminate="True"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
