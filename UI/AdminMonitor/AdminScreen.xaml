@@ -41,6 +41,7 @@
         <StackPanel Grid.Row="1" Grid.ColumnSpan="1" VerticalAlignment="Center" Orientation="Horizontal">
             <RadioButton x:Name="ViewUsersRadioButton" Content="View User" Checked="getUsersButton_Click"/>
             <RadioButton Content="View Roles" x:Name="ViewRolesRadioButton" Margin="10,0,0,0" Checked="getRolesButton_Click"/>
+            <RadioButton Content="Audit" x:Name="AuditRadioButton" Margin="10,0,0,0" Checked="AuditRadioButton_Checked"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" >
@@ -57,9 +58,9 @@
             </DataGrid.Resources>
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Privileges" Click="PrivilegesButton_Click" />
+                    <MenuItem Header="Privileges" Click="PrivilegesButton_Click" x:Name="PrivilegesButton" />
                     <MenuItem Header="Grant Role" Click="GrantRoleButton_Click" x:Name="GrantRoleContextItem"/>
-                    <MenuItem Header="Delete" Click="Delete_Click"/>
+                    <MenuItem Header="Delete" Click="Delete_Click" x:Name="DeleteButton"/>
                     <MenuItem Header="Change Password" x:Name="ChangePasswordContextItem" Click="ChangePasswordContextItem_Click"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>

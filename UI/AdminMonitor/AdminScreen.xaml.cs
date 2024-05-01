@@ -52,6 +52,8 @@ namespace AdminMonitor
             GetUser(_currentPage, _rowsPerPage);
             GrantRoleContextItem.IsEnabled = true;
             ChangePasswordContextItem.IsEnabled = true;
+            PrivilegesButton.IsEnabled = true;
+            DeleteButton.IsEnabled = true;
         }
 
         private void GetUser(int page, int rowsPerPage)
@@ -236,6 +238,73 @@ namespace AdminMonitor
             }
         }
 
+        private void GetAudit(int page, int rowsPerPage)
+        {
+            try
+            {
+                int skip = (page - 1) * rowsPerPage;
+                int take = rowsPerPage;
+
+                OracleCommand query = con.CreateCommand();
+                query.CommandText = """
+                                    select EVENT_TIMESTAMP, ACTION_NAME, OBJECT_SCHEMA, OBJECT_NAME, SQL_TEXT, SYSTEM_PRIVILEGE_USED, TARGET_USER, CURRENT_USER, AUDIT_TYPE,SESSIONID,DBID, DBUSERNAME,CLIENT_PROGRAM_NAME, UNIFIED_AUDIT_POLICIES, FGA_POLICY_NAME,
+                                    count(*) over() as "TotalItems"
+                                    from unified_audit_trail
+                                    order by EVENT_TIMESTAMP
+                                    offset :Skip rows 
+                                    fetch next :Take rows only
+                                    """;
+
+
+                query.CommandType = CommandType.Text;
+                query.Parameters.Add(new OracleParameter("Skip", skip));
+                query.Parameters.Add(new OracleParameter("Take", take));
+
+
+                OracleDataReader datareader = query.ExecuteReader();
+                empDT = new DataTable();
+                empDT.Load(datareader);
+                if (totalItems == -1 && empDT.Rows.Count > 0)
+                {
+                    totalItems = int.Parse(empDT.Rows[0]["TotalItems"].ToString());
+                    totalPages = (totalItems / rowsPerPage);
+                    if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
+                    else totalPages = (int)(totalItems / rowsPerPage) + 1;
+                }
+
+
+                empDT.Columns.Remove("TotalItems");
+                dataGridView.ItemsSource = empDT.DefaultView;
+                DisplayMode = "Audit";
+
+                PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";
+                TotalItemDisplayTextBox.Text = $" of {totalItems} item(s).";
+
+                if (_currentPage == totalPages)
+                {
+                    NextButton.IsEnabled = false;
+                }
+                else
+                {
+                    NextButton.IsEnabled = true;
+                }
+
+                if (_currentPage == 1)
+                {
+                    PrevButton.IsEnabled = false;
+                }
+                else
+                {
+                    PrevButton.IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
+        }
+
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             DataRowView row = (DataRowView)dataGridView.SelectedItems[0];
@@ -381,6 +450,10 @@ namespace AdminMonitor
                 {
                     GetRoles(_currentPage, _rowsPerPage);
                 }
+                else if (DisplayMode == "Audit")
+                {
+                    GetAudit(_currentPage, _rowsPerPage);
+                }
             }
         }
 
@@ -396,6 +469,10 @@ namespace AdminMonitor
                 else if (DisplayMode == "Roles")
                 {
                     GetRoles(_currentPage, _rowsPerPage);
+                }
+                else if (DisplayMode == "Audit")
+                {
+                    GetAudit(_currentPage, _rowsPerPage);
                 }
             }
         }
@@ -415,7 +492,22 @@ namespace AdminMonitor
                 {
                     getRolesButton_Click(sender, e);
                 }
+                else if (DisplayMode == "Audit")
+                {
+                    GetAudit(_currentPage, _rowsPerPage);
+                }
             }
+        }
+
+        private void AuditRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _currentPage = 1;
+            totalItems = -1;
+            GetAudit(_currentPage, _rowsPerPage);
+            GrantRoleContextItem.IsEnabled = false;
+            ChangePasswordContextItem.IsEnabled = false;
+            PrivilegesButton.IsEnabled = false;
+            DeleteButton.IsEnabled = false;
         }
     }
 }
