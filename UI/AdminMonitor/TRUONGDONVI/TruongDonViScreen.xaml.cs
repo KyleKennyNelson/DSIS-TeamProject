@@ -51,6 +51,12 @@ namespace AdminMonitor.TRUONGDONVI
         int totalPages = -1;
         int totalItems = -1;
 
+        private void ThongBao_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            var screen = new ThongBaoWins(con);
+            screen.Show();
+        }
+
         private void GetEmpInfor()
         {
             try

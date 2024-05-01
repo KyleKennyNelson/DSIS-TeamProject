@@ -20,6 +20,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Center" Margin="20,0,0,0" Grid.Column="0">
                     <Label Content="Chào mừng trưởng đơn vị!" FontSize="16"/>
@@ -27,6 +28,10 @@
                 </StackPanel>
                 <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button Content="Quản lý phân công" Name="QLPC_Button" Click="QLPC_ButtonClick" 
+                            Height="50" Width="200" FontWeight="Bold" FontSize="17"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Content="Thông báo" Name="ThongBao_Button" Click="ThongBao_ButtonClick" 
                             Height="50" Width="200" FontWeight="Bold" FontSize="17"/>
                 </StackPanel>
             </Grid>

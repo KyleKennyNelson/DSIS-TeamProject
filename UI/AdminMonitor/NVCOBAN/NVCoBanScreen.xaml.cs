@@ -455,5 +455,11 @@ namespace AdminMonitor.NVCOBAN
                 }
             }
         }
+
+        private void ThongBao_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            var screen = new ThongBaoWins(con);
+            screen.Show();
+        }
     }
 }

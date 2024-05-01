@@ -25,6 +25,10 @@
                 your information and see the data of students
             </TextBlock>
         </StackPanel>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Right"  VerticalAlignment="Center">
+            <Button Content="Thông báo" Name="ThongBao_Button" Click="ThongBao_ButtonClick" 
+                    Height="50" Width="200" FontWeight="Bold" FontSize="17"/>
+        </StackPanel>
 
         <DataGrid Name="dataGridViewEmpInfor" Grid.Row="1"
                   AutoGenerateColumns="True" SelectionMode="Single">

@@ -50,6 +50,12 @@ namespace AdminMonitor.GIAOVIEN
             con = connectionstring;
         }
 
+        private void ThongBaoButton_Click(object sender, RoutedEventArgs e)
+        {
+            var screen = new ThongBaoWins(con);
+            screen.Show();
+        }
+
         private void GetEmpInfor()
         {
             try
