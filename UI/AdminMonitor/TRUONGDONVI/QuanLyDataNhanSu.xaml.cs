@@ -309,7 +309,7 @@ namespace AdminMonitor.TRUONGDONVI
                         query.CommandText = """
                                                 INSERT INTO admin.PROJECT_NHANSU(MANV,HOTEN,PHAI,NGSINH,PHUCAP,
                                                                                 DT,VAITRO,DONVI,COSO)
-                                                values(:manv, :hoten, :phai, :ngsinh, :phucap, dt, vaitro, donvi, coso)
+                                                values(:manv, :hoten, :phai, :ngsinh, :phucap, :dt, :vaitro, :donvi, :coso)
                                             """;
 
                         query.CommandType = CommandType.Text;
