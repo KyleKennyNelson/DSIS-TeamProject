@@ -32,7 +32,7 @@ AS
 begin
     open cur_GIANGVIEN;
     fetch cur_GIANGVIEN into vaitro;
-    if (vaitro = 'GIANGVIEN'  OR vaitro = 'TRGDONVI' OR vaitro = 'TRGKHOA') then
+    if (vaitro = 'GIANGVIEN'  OR vaitro = 'TRGDONVI') then
         begin
             STRSQL := '(';
             for row_PHANCONG in cur_PHANCONG
@@ -56,7 +56,7 @@ BEGIN
         OBJECT_SCHEMA =>'ADMIN',
         OBJECT_NAME=>'PROJECT_DANGKI',
         POLICY_NAME =>'GIANGVIEN_DANGKI_SEL',
-        FUNCTION_SCHEMA => 'ADMIN',
+        FUNCTION_SCHEMA => 'SYS',
         POLICY_FUNCTION=>'SEC_GIANGVIEN_DANGKI_SEL',
         STATEMENT_TYPES=>'SELECT'
     );

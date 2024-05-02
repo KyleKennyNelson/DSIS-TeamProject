@@ -1,9 +1,22 @@
 --alter session set "_oracle_script"=true;
 -- drop user ADMIN CASCADE;
+--Drop PDB incase you need
+alter pluggable database user_pdb close immediate instances=all;
+alter session set container=CDB$ROOT;
+drop pluggable database user_pdb INCLUDING DATAFILES;
+--Create pluggable database
+create pluggable database user_pdb  admin user user_pdb identified by 123 roles=(connect) file_name_convert = ('/oradata','/user_pdb/');
+alter pluggable database user_pdb open;
+
+--See PDB status
+select name,open_mode from v$pdbs;
+--Alter container to a pdb
+alter session set container=user_pdb;
+
 create user ADMIN identified by 123;
 grant SYSDBA to ADMIN;
 grant DBA to ADMIN;
-/
+
 CREATE OR REPLACE FUNCTION ADMIN.isUserExists(pv_user IN varchar2)
 return BOOLEAN
 IS
@@ -24,17 +37,6 @@ BEGIN
     END IF;
 END;
 /
---Drop PDB incase you need
---alter pluggable database user_pdb close immediate instances=all;
---alter session set container=CDB$ROOT;
---drop pluggable database user_pdb INCLUDING DATAFILES;
---Create pluggable database
-create pluggable database user_pdb  admin user user_pdb identified by 123 roles=(connect) file_name_convert = ('/oradata','/user_pdb/');
-alter pluggable database user_pdb open;
---See PDB status
-select name,open_mode from v$pdbs;
---Alter container to a pdb
-alter session set container=user_pdb;
 --Check if OLS is enabled
 SELECT VALUE FROM v$option WHERE parameter = 'Oracle Label Security';
 SELECT status FROM dba_ols_status WHERE name = 'OLS_CONFIGURE_STATUS'; 

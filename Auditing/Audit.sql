@@ -4,6 +4,7 @@ AUDIT POLICY audit_obj_pol_dangki EXCEPT admin whenever not successful;
 
 CREATE AUDIT POLICY audit_obj_pol_phancong
 ACTIONS ALL ON admin.project_phancong;
+
 AUDIT POLICY audit_obj_pol_phancong;
 
 CREATE AUDIT POLICY audit_obj_pol_SINHVIEN
@@ -27,7 +28,7 @@ ACTIONS ALL ON admin.PROJECT_DONVI;
 AUDIT POLICY audit_obj_pol_DONVI;
 
 --3-a
-CREATE OR REPLACE FUNCTION check_giangvien_role
+CREATE OR REPLACE FUNCTION sys.check_giangvien_role
 RETURN VARCHAR2
 IS
   v_role VARCHAR2(50);
@@ -60,7 +61,7 @@ BEGIN
   );
 END;
 
-
+/
 --3-b
 CREATE OR REPLACE FUNCTION f_username RETURN VARCHAR2 IS
   USERROLE VARCHAR2(50);
@@ -68,7 +69,7 @@ BEGIN
   USERROLE := SYS_CONTEXT('USERENV', 'SESSION_USER');
   RETURN USERROLE;
 END ;
-
+/
 BEGIN
   DBMS_FGA.ADD_POLICY(
     object_schema   => 'ADMIN',  
@@ -81,5 +82,7 @@ BEGIN
     enable          => TRUE
   );
 END;
-
+/
 SELECT * FROM unified_audit_trail;
+
+SELECT VALUE FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';

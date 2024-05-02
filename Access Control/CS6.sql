@@ -170,11 +170,11 @@ begin
         return '';
     end if;
 end;
-
+/
 grant select on ADMIN.PROJECT_DANGKI to SINHVIEN;
 
 --execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'SINHVIEN_DANGKI_SEL');
-
+/
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
@@ -228,12 +228,12 @@ begin
         return '';
     end if;
 end;
-
+/
 grant delete on ADMIN.PROJECT_DANGKI to SINHVIEN;
 grant insert (MASV,MAGV,MAHP,HK,NAM,MACT) on ADMIN.PROJECT_DANGKI to SINHVIEN;
 
 --execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_DANGKI',POLICY_NAME=> 'SINHVIEN_DANGKI_INS_DEL');
-
+/
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
@@ -278,7 +278,7 @@ end;
 grant select on ADMIN.PROJECT_PHANCONG to SINHVIEN;
 
 --execute dbms_rls.drop_policy(OBJECT_SCHEMA=> 'ADMIN',OBJECT_NAME=>'PROJECT_PHANCONG',POLICY_NAME=> 'SINHVIEN_PHANCONG_SEL');
-
+/
 
 BEGIN
     dbms_rls.add_policy(

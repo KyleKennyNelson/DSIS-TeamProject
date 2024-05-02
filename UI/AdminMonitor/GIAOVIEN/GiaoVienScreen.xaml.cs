@@ -213,22 +213,35 @@ namespace AdminMonitor.GIAOVIEN
 
         private void CapNhatDuLieuSinhVien_Click(object sender, RoutedEventArgs e)
         {
-            DataRowView row = (DataRowView)dataGridView.SelectedItems[0];
-            string MSSV = (string)row.Row.ItemArray[0];
-            string MaHP = (string)row.Row.ItemArray[1];
-            decimal HK = (decimal)row.Row.ItemArray[2];
-            decimal Nam = (decimal)row.Row.ItemArray[3];
-            string MaCT = (string)row.Row.ItemArray[4];
+            try
+            {
+                var selected = dataGridView.SelectedItems[0];
+                DataRowView? row = null;
+                if (selected != null)
+                {
+                    row = selected as DataRowView;
 
-            decimal DTH = (decimal)row.Row.ItemArray[5];
-            decimal DQT = (decimal)row.Row.ItemArray[6];
-            decimal DCK = (decimal)row.Row.ItemArray[7];
-            decimal DTK = (decimal)row.Row.ItemArray[8];
-            CapNhatDuLieuSinhVienScreen screen = new(con, MSSV, MaHP, HK, Nam, MaCT, DTH, DQT, DCK, DTK);
-            this.Hide();
-            screen.ShowDialog();
-            GetDangKy(_currentPage, _rowsPerPage);
-            this.Show();
+                    string MSSV = (string)row.Row.ItemArray[0];
+                    string MaHP = (string)row.Row.ItemArray[1];
+                    decimal HK = (decimal)row.Row.ItemArray[2];
+                    decimal Nam = (decimal)row.Row.ItemArray[3];
+                    string MaCT = (string)row.Row.ItemArray[4];
+
+                    decimal DTH = (row.Row.ItemArray[5] != DBNull.Value) ? (decimal)row.Row.ItemArray[5] : 0;
+                    decimal DQT = (row.Row.ItemArray[6] != DBNull.Value) ? (decimal)row.Row.ItemArray[6] : 0;
+                    decimal DCK = (row.Row.ItemArray[7] != DBNull.Value) ? (decimal)row.Row.ItemArray[7] : 0;
+                    decimal DTK = (row.Row.ItemArray[8] != DBNull.Value) ? (decimal)row.Row.ItemArray[8] : 0;
+                    CapNhatDuLieuSinhVienScreen screen = new(con, MSSV, MaHP, HK, Nam, MaCT, DTH, DQT, DCK, DTK);
+                    this.Hide();
+                    screen.ShowDialog();
+                    GetDangKy(_currentPage, _rowsPerPage);
+                    this.Show();
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            
         }
 
         private void GetSinhVien(int page, int rowsPerPage)
