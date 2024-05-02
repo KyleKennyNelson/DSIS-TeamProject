@@ -73,14 +73,17 @@ namespace AdminMonitor.GIAOVU
                 if (_TTSinhVien != null)
                 {
                     _TTSinhVien.NgaySinh = DateTime.Parse(NgaySinhDatePicker.Text);
-                    _TTSinhVien.SOTCTL = int.Parse(SoTinChiTextBox.Text);
-                    _TTSinhVien.DTBTL = double.Parse(DiemTBTextBox.Text);
+
                     if (mode == Modes.Update)
                     {
+                        _TTSinhVien.SOTCTL = int.Parse(SoTinChiTextBox.Text);
+                        _TTSinhVien.DTBTL = double.Parse(DiemTBTextBox.Text);
                         await Task.Run(() => Controller_SinhVien.UpdateSinhVien(Conn, _TTSinhVien));
                     }
                     else if (mode == Modes.Insert)
                     {
+                        _TTSinhVien.SOTCTL = 0;
+                        _TTSinhVien.DTBTL = 0;
                         await Task.Run(() => Controller_SinhVien.InsertSinhVien(Conn, _TTSinhVien));
                     }
                 }

@@ -83,15 +83,15 @@ namespace AdminMonitor.SINHVIEN
                 {
                     result.Add(new SinhVien()
                     {
-                        MASV = (string)row["MASV"],
-                        HoTen = (string)row["HOTEN"],
-                        GioiTinh = (string)row["PHAI"],
+                        MASV = (row["MASV"] != DBNull.Value) ? (string)row["MASV"] : "",
+                        HoTen = (row["HOTEN"] != DBNull.Value) ? (string)row["HOTEN"] : "",
+                        GioiTinh = (row["PHAI"] != DBNull.Value) ? (string)row["PHAI"] : "",
                         NgaySinh = (row["NGSINH"] != DBNull.Value) ? (DateTime)row["NGSINH"] : null,
-                        DiaChi = (string)row["DIACHI"],
-                        SDT = (string)row["DT"],
-                        MaChuongTrinh = (string)row["MACT"],
-                        MaNganh = (string)row["MANGANH"],
-                        CoSo = (string)row["COSO"],
+                        DiaChi = (row["DIACHI"] != DBNull.Value) ? (string)row["DIACHI"] : "",
+                        SDT = (row["DT"] != DBNull.Value) ? (string)row["DT"] : "",
+                        MaChuongTrinh = (row["MACT"] != DBNull.Value) ? (string)row["MACT"] : "",
+                        MaNganh = (row["MANGANH"] != DBNull.Value) ? (string)row["MANGANH"] : "",
+                        CoSo = (row["COSO"] != DBNull.Value) ? (string)row["COSO"] : "",
                         DTBTL = (row["DTBTL"] != DBNull.Value) ? (double)(decimal)row["DTBTL"] : 0,
                         SOTCTL = (row["SOTCTL"] != DBNull.Value) ? (int)(decimal)row["SOTCTL"] : 0
                     });

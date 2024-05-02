@@ -58,9 +58,9 @@ begin
         return '';
     end if;
 end;
-
+/
 grant delete on ADMIN.PROJECT_PHANCONG to GIAOVU;
-
+/
 BEGIN
     dbms_rls.add_policy(
         OBJECT_SCHEMA =>'ADMIN',
@@ -71,6 +71,14 @@ BEGIN
         STATEMENT_TYPES=>'DELETE'
     );
 END;
+    
+BEGIN
+    dbms_rls.drop_policy(
+        OBJECT_SCHEMA =>'ADMIN',
+        OBJECT_NAME=>'PROJECT_PHANCONG',
+        POLICY_NAME =>'SGIAOVU_PHANCONG_DEL'
+    );
+end;
 /
 --VIEW CHINH SUA QUAN H? DANGKY
 --CREATE OR REPLACE VIEW admin.UV_GV_DANGKI

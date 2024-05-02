@@ -74,7 +74,6 @@ EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '10000','L1');
 EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '20000','L2');
 EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '30000','L3');
 EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '40000','L4');
-EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '50000','L5');
 EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '60000','L6');
 EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '20100','L2::CS1');
 EXECUTE SA_LABEL_ADMIN.CREATE_LABEL('region_policy', '23100','L2:KHMT:CS2');
@@ -136,7 +135,7 @@ grant select on ADMIN.PROJECT_THONGBAO to PUBLIC;
 
 --  a) gan nhan cho truong khoa
 EXECUTE    SA_USER_ADMIN.SET_USER_LABELS('region_policy','NV003',max_read_label=>'L6:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:TT');
-
+/
 --  b) gan nhan cho tat ca truong bm tai CS2
 declare
     cursor cur_TRGDONVI is (select * 
@@ -153,10 +152,10 @@ begin
         end if;
     end loop;
 end;
-
+/
 --  c) gan nhan cho 1 giao vu
 EXECUTE SA_USER_ADMIN.SET_USER_LABELS('region_policy','NV002',max_read_label=>'L3:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:TT');
-
+/
 --  h1)
 declare
     cursor cur_SINHVIEN is (select * from ADMIN.PROJECT_SINHVIEN);
@@ -173,7 +172,7 @@ begin
         end if;
     end loop;
 end;
-
+/
 --  h2)
 declare
     cursor cur_GIANGVIEN is (select NS.MANV as MANV, DV.TENDV as TENDV, DV.COSO as COSO
@@ -211,6 +210,7 @@ begin
         end if;
     end loop;
 end;
+/
 --  h3)
 declare
     cursor cur_NVCOBAN is (select *
@@ -228,10 +228,10 @@ begin
         end if;
     end loop;
 end;
-
+/
 --See all existing labels
 --select * from ALL_SA_LABELS ORDER BY LABEL_TAG ASC;
 
---SELECT * FROM ALL_SA_USER_LABELS WHERE user_name = 'NV018';
+--SELECT * FROM ALL_SA_USER_LABELS WHERE user_name = 'NV003';
 
 --select * from ADMIN.PROJECT_THONGBAO
