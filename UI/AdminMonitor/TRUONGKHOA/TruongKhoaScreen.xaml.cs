@@ -423,7 +423,7 @@ namespace AdminMonitor.TRUONGKHOA
                 OracleDataReader datareader = query.ExecuteReader();
                 dkDT = new DataTable();
                 dkDT.Load(datareader);
-                if (totalItems == -1 && svDT.Rows.Count > 0)
+                if (totalItems == -1 && dkDT.Rows.Count > 0)
                 {
                     totalItems = int.Parse(dkDT.Rows[0]["TotalDangKy"].ToString());
                     totalPages = (totalItems / rowsPerPage);

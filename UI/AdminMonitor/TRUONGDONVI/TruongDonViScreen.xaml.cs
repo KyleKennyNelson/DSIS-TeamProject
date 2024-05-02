@@ -37,6 +37,7 @@ namespace AdminMonitor.TRUONGDONVI
 
 
         DataTable svDT;
+        DataTable dkDT;
         DataTable dvDT;
         DataTable hpDT;
         DataTable khmDT;
@@ -152,7 +153,7 @@ namespace AdminMonitor.TRUONGDONVI
                 OracleCommand query = con.CreateCommand();
                 query.CommandText = """
                                         SELECT MASV, MAHP, HK, NAM, MACT, DIEMTH, DIEMQT, 
-                                        DIEMCK, DIEMTK, count(*) over() as "TotalSinhVien"
+                                        DIEMCK, DIEMTK, count(*) over() as "TotalDangKy"
                                         FROM admin.PROJECT_DANGKI
                                         order by MASV
                                         offset :Skip rows 
@@ -166,19 +167,19 @@ namespace AdminMonitor.TRUONGDONVI
 
 
                 OracleDataReader datareader = query.ExecuteReader();
-                svDT = new DataTable();
-                svDT.Load(datareader);
-                if (totalItems == -1 && svDT.Rows.Count > 0)
+                dkDT = new DataTable();
+                dkDT.Load(datareader);
+                if (totalItems == -1 && dkDT.Rows.Count > 0)
                 {
-                    totalItems = int.Parse(svDT.Rows[0]["TotalSinhVien"].ToString());
+                    totalItems = int.Parse(dkDT.Rows[0]["TotalDangKy"].ToString());
                     totalPages = (totalItems / rowsPerPage);
                     if (totalItems % rowsPerPage == 0) totalPages = (totalItems / rowsPerPage);
                     else totalPages = (int)(totalItems / rowsPerPage) + 1;
                 }
 
 
-                svDT.Columns.Remove("TotalSinhVien");
-                dataGridView.ItemsSource = svDT.DefaultView;
+                dkDT.Columns.Remove("TotalDangKy");
+                dataGridView.ItemsSource = dkDT.DefaultView;
                 DisplayMode = "DangKy";
 
                 PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";
