@@ -63,7 +63,11 @@ namespace AdminMonitor.TRUONGDONVI
             {
                 ConfirmButton.Content = _mode;
                 NewMaGVComboBox.ItemsSource = _MaGVList;
-                NewMaHPComboBox.ItemsSource = _MaHPList;
+                NewMaHPComboBox.Visibility = Visibility.Collapsed;
+                NewMaHPBox.Visibility = Visibility.Visible;
+
+                NewMaHPBox.Text = _MaHP;
+                NewMaHPBox.IsReadOnly = true;
 
                 NewHKBox.Text = _HK.ToString();
                 NewHKBox.IsReadOnly = true;
@@ -78,7 +82,8 @@ namespace AdminMonitor.TRUONGDONVI
             {
                 ConfirmButton.Content = _mode;
                 NewMaGVComboBox.ItemsSource = _MaGVList;
-                NewMaGVComboBox.ItemsSource = _MaGVList;
+                NewMaHPComboBox.ItemsSource = _MaHPList;
+                NewMaHPBox.Visibility = Visibility.Collapsed;
             }
 
             await Task.Run(() => Thread.Sleep(25));
@@ -225,9 +230,9 @@ namespace AdminMonitor.TRUONGDONVI
                         if (_role == "TruongKhoa")
                         {
                             query1.CommandText = """
-                                                    INSERT INTO admin.UV_TRGKHOA_PHANCONG(MAGV, MAHP, HK, NAM, MACT)
-                                                    values(:magv, :mahp, :hk, :nam, :mact)
-                                                """;
+                                                    INSERT INTO ADMIN.PROJECT_KHMO (MAHP,HK,NAM,MACT)
+                                                    VALUES(:mahp, :hk, :nam, :mact)
+                                                 """;
 
                             query2.CommandText = """
                                                     INSERT INTO admin.UV_TRGKHOA_PHANCONG(MAGV, MAHP, HK, NAM, MACT)

@@ -51,22 +51,24 @@
 
             <ComboBox x:Name="NewMaNSComboBox" Width="80" Grid.Row="1" Grid.Column="0"
              SelectionChanged="NewMaNSComboBox_SelectionChanged" Height="25"/>
-            <ComboBox x:Name="NewMaCSComboBox" Width="70" Grid.Row="1" Grid.Column="8"
-             SelectionChanged="NewMaCSComboBox_SelectionChanged"/>
+            <TextBox x:Name="NewMaNSBox" Width="80" Grid.Row="1" Grid.Column="0"
+             TextAlignment="Center" FontSize="15"/>
             <TextBox x:Name="NewHoTenBox" Width="180" Grid.Row="1" Grid.Column="1"
-             TextAlignment="Center" FontSize="15"/>
+             TextAlignment="Center" FontSize="15" TextChanged="NewHoTenBox_TextChanged"/>
             <TextBox x:Name="NewPhaiBox" Width="50" Grid.Row="1" Grid.Column="2"
-             TextAlignment="Center" FontSize="15"/>
+             TextAlignment="Center" FontSize="15" TextChanged="NewPhaiBox_TextChanged"/>
             <TextBox x:Name="NewNgaySinhBox" Width="120" Grid.Row="1" Grid.Column="3"
-             TextAlignment="Center" FontSize="15"/>
+             TextAlignment="Center" FontSize="15" TextChanged="NewNgaySinhBox_TextChanged"/>
             <TextBox x:Name="NewPhuCapBox" Width="100" Grid.Row="1" Grid.Column="4"
              TextAlignment="Center" FontSize="15" TextChanged="NewPhuCapBox_TextChanged"/>
             <TextBox x:Name="NewDTBox" Width="110" Grid.Row="1" Grid.Column="5"
              TextAlignment="Center" FontSize="15" TextChanged="NewDTBox_TextChanged"/>
             <TextBox x:Name="NewVaiTroBox" Width="80" Grid.Row="1" Grid.Column="6"
-             TextAlignment="Center" FontSize="15"/>
+             TextAlignment="Center" FontSize="15" TextChanged="NewVaiTroBox_TextChanged"/>
             <TextBox x:Name="NewDonViBox" Width="80" Grid.Row="1" Grid.Column="7"
              TextAlignment="Center" FontSize="15" TextChanged="NewDonViBox_TextChanged"/>
+            <TextBox x:Name="NewCoSoBox" Width="65" Grid.Row="1" Grid.Column="8"
+             TextAlignment="Center" FontSize="15" TextChanged="NewCoSoBox_TextChanged"/>
             
         </Grid>
 

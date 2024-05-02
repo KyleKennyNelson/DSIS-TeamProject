@@ -31,7 +31,7 @@ namespace AdminMonitor.TRUONGDONVI
         }
         public OracleConnection _con { get; set; }
         DataTable pcDT = new DataTable();
-
+        DataTable qlpcDT = new DataTable();
         List<int> rowPerPageOptions = new List<int>() {
             4,16,32,64,128,256,512,1024
         };
@@ -70,14 +70,14 @@ namespace AdminMonitor.TRUONGDONVI
                 query.Parameters.Add(new OracleParameter("Take", take));
                 OracleDataReader datareader = query.ExecuteReader();
 
-                pcDT = new DataTable();
-                pcDT.Load(datareader);
+                qlpcDT = new DataTable();
+                qlpcDT.Load(datareader);
 
-                if (totalItems == -1 && pcDT.Rows.Count > 0)
+                if (totalItems == -1 && qlpcDT.Rows.Count > 0)
                 {
-                    if (pcDT.Rows[0] != null)
+                    if (qlpcDT.Rows[0] != null)
                     {
-                        totalItems = int.Parse(pcDT.Rows[0]["TotalItems"].ToString());
+                        totalItems = int.Parse(qlpcDT.Rows[0]["TotalItems"].ToString());
                     }
 
                     totalPages = (totalItems / rowsPerPage);
@@ -85,8 +85,8 @@ namespace AdminMonitor.TRUONGDONVI
                     else totalPages = (int)(totalItems / rowsPerPage) + 1;
                 }
 
-                pcDT.Columns.Remove("TotalItems");
-                dataGridViewPHANCONGInfor.ItemsSource = pcDT.AsDataView();
+                qlpcDT.Columns.Remove("TotalItems");
+                dataGridViewPHANCONGInfor.ItemsSource = qlpcDT.AsDataView();
 
                 PageCountTextBox.Text = $" {_currentPage}/{totalPages} ";
                 TotalItemDisplayTextBox.Text = $" of {totalItems} item(s).";
@@ -119,15 +119,15 @@ namespace AdminMonitor.TRUONGDONVI
         {
             string mode = "Add";
             string role = "TruongDonVi";
-            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            List<string> MAGVList = new List<string>(qlpcDT.Rows.Count);
+            foreach (DataRow rows in qlpcDT.Rows)
             {
                 if (!MAGVList.Contains((string)rows["MAGV"]))
                     MAGVList.Add((string)rows["MAGV"]);
             }
 
-            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            List<string> MAHPList = new List<string>(qlpcDT.Rows.Count);
+            foreach (DataRow rows in qlpcDT.Rows)
             {
                 if (!MAHPList.Contains((string)rows["MAHP"]))
                     MAHPList.Add((string)rows["MAHP"]);
@@ -148,21 +148,21 @@ namespace AdminMonitor.TRUONGDONVI
             string MACT = (string)row.Row.ItemArray[4];
             string mode = "Update";
             string role = "TruongDonVi";
-            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            List<string> MAGVList = new List<string>(qlpcDT.Rows.Count);
+            foreach (DataRow rows in qlpcDT.Rows)
             {
                 if (!MAGVList.Contains((string)rows["MAGV"]))
                     MAGVList.Add((string)rows["MAGV"]);
             }
 
-            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            List<string> MAHPList = new List<string>(qlpcDT.Rows.Count);
+            foreach (DataRow rows in qlpcDT.Rows)
             {
                 if (!MAHPList.Contains((string)rows["MAHP"]))
                     MAHPList.Add((string)rows["MAHP"]);
             }
 
-            var screen = new QuanLyDataPHANCONG(_con, null, null, 0, 0, null, mode, role, MAGVList, MAHPList);
+            var screen = new QuanLyDataPHANCONG(_con, MAGV, MAHP, HK, NAM, MACT, mode, role, MAGVList, MAHPList);
             screen.ShowDialog();
             GetPHANCONGInfor(_currentPage, _rowsPerPage);
         }

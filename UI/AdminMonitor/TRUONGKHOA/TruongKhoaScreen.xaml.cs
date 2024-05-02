@@ -119,16 +119,42 @@ namespace AdminMonitor.TRUONGKHOA
         {
             string mode = "Add";
             string role = "TruongKhoa";
+            OracleCommand query1 = con.CreateCommand();
+            OracleCommand query2 = con.CreateCommand();
+            query1.CommandText = """
+                                        select MAGV
+                                        from ADMIN.Project_PHANCONG
+                                        order by MAGV
+                                    """;
 
-            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            query2.CommandText = """
+                                        select MAHP
+                                        FROM ADMIN.UV_TRGKHOA_HOCPHAN
+                                        order by MAHP
+                                    """;
+
+
+            query1.CommandType = CommandType.Text;
+            query2.CommandType = CommandType.Text;
+
+
+            OracleDataReader datareader1 = query1.ExecuteReader();
+            OracleDataReader datareader2 = query2.ExecuteReader();
+
+            var pc1DT = new DataTable();
+            pc1DT.Load(datareader1);
+
+            var hpDT = new DataTable();
+            hpDT.Load(datareader2);
+
+            List<string> MAGVList = new List<string>(pc1DT.Rows.Count);
+            List<string> MAHPList = new List<string>(hpDT.Rows.Count);
+            foreach (DataRow rows in pc1DT.Rows)
             {
                 if (!MAGVList.Contains((string)rows["MAGV"]))
                     MAGVList.Add((string)rows["MAGV"]);
             }
-
-            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            foreach (DataRow rows in hpDT.Rows)
             {
                 if (!MAHPList.Contains((string)rows["MAHP"]))
                     MAHPList.Add((string)rows["MAHP"]);
@@ -150,15 +176,42 @@ namespace AdminMonitor.TRUONGKHOA
             string mode = "Update";
             string role = "TruongKhoa";
 
-            List<string> MAGVList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            OracleCommand query1 = con.CreateCommand();
+            OracleCommand query2 = con.CreateCommand();
+            query1.CommandText = """
+                                        select MAGV
+                                        from ADMIN.Project_PHANCONG
+                                        order by MAGV
+                                    """;
+
+            query2.CommandText = """
+                                        select MAHP
+                                        FROM ADMIN.UV_TRGKHOA_HOCPHAN
+                                        order by MAHP
+                                    """;
+
+
+            query1.CommandType = CommandType.Text;
+            query2.CommandType = CommandType.Text;
+
+
+            OracleDataReader datareader1 = query1.ExecuteReader();
+            OracleDataReader datareader2 = query2.ExecuteReader();
+
+            var pc1DT = new DataTable();
+            pc1DT.Load(datareader1);
+
+            var hpDT = new DataTable();
+            hpDT.Load(datareader2);
+
+            List<string> MAGVList = new List<string>(pc1DT.Rows.Count);
+            List<string> MAHPList = new List<string>(hpDT.Rows.Count);
+            foreach (DataRow rows in pc1DT.Rows)
             {
                 if (!MAGVList.Contains((string)rows["MAGV"]))
                     MAGVList.Add((string)rows["MAGV"]);
             }
-
-            List<string> MAHPList = new List<string>(pcDT.Rows.Count);
-            foreach (DataRow rows in pcDT.Rows)
+            foreach (DataRow rows in hpDT.Rows)
             {
                 if (!MAHPList.Contains((string)rows["MAHP"]))
                     MAHPList.Add((string)rows["MAHP"]);
@@ -173,6 +226,7 @@ namespace AdminMonitor.TRUONGKHOA
         private void DeletePhanCong_Click(object sender, RoutedEventArgs e)
         {
             DataRowView row = (DataRowView)dataGridViewPHANCONGInfor.SelectedItems[0];
+
             string MAGV = (string)row.Row.ItemArray[0];
             string MAHP = (string)row.Row.ItemArray[1];
             decimal HK = (decimal)row.Row.ItemArray[2];
@@ -321,11 +375,7 @@ namespace AdminMonitor.TRUONGKHOA
                 if (!MANSList.Contains((string)rows["MANV"]))
                     MANSList.Add((string)rows["MANV"]);
             }
-
-            List<string> MACSList = new List<string>();
-            MACSList.Add("CS1");
-            MACSList.Add("CS2");
-            var screen = new QuanLyDataNhanSu(con, null, null, null, DateTime.Now, 0, null, null, null, null, mode, MANSList, MACSList);
+            var screen = new QuanLyDataNhanSu(con, null, null, null, DateTime.Now, 0, null, null, null, null, mode, MANSList);
             screen.ShowDialog();
             GetNhanSu(_currentPage, _rowsPerPage);
         }
@@ -347,16 +397,12 @@ namespace AdminMonitor.TRUONGKHOA
             List<string> MANSList = new List<string>(nsDT.Rows.Count);
             foreach (DataRow rows in nsDT.Rows)
             {
-                if (!MANSList.Contains((string)rows["MANS"]))
-                    MANSList.Add((string)rows["MANS"]);
+                if (!MANSList.Contains((string)rows["MANV"]))
+                    MANSList.Add((string)rows["MANV"]);
             }
 
-            List<string> MACSList = new List<string>();
-            MACSList.Add("CS1");
-            MACSList.Add("CS2");
-
             var screen = new QuanLyDataNhanSu(con, MANV, HOTEN, PHAI, NGSINH, PHUCAP, DT,
-                                              VAITRO, DONVI, COSO, mode, MANSList, MACSList);
+                                              VAITRO, DONVI, COSO, mode, MANSList);
             screen.ShowDialog();
             GetNhanSu(_currentPage, _rowsPerPage);
         }

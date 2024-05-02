@@ -49,11 +49,10 @@ namespace AdminMonitor.TRUONGDONVI
         private string _newDonVi;
         private string _newCoSo;
         public QuanLyDataNhanSu(OracleConnection connection, string MaNV, string Hoten, string Phai, DateTime NgaySinh,
-                                int PhuCap, string DT, string VaiTro, string DonVi, string CoSo, string mode, List<string> MaNSList, List<string> MaCSList)
+                                int PhuCap, string DT, string VaiTro, string DonVi, string CoSo, string mode, List<string> MaNSList)
         {
             InitializeComponent();
             _MaNSList = MaNSList;
-            _MaCSList = MaCSList;
             _Conn = connection;
             _mode = mode;
             _MaNV = MaNV;
@@ -79,36 +78,45 @@ namespace AdminMonitor.TRUONGDONVI
             if (_mode == "Update")
             {
                 ConfirmButton.Content = _mode;
-                NewMaNSComboBox.ItemsSource = _MaNSList;
-                NewMaCSComboBox.ItemsSource = _MaCSList;
+
+                NewMaNSBox.Visibility = Visibility.Visible;
+                NewMaNSBox.Text = _MaNV;
+                NewMaNSBox.IsReadOnly = true;
+                NewMaNSComboBox.Visibility = Visibility.Collapsed;
 
                 NewHoTenBox.Text = _Hoten;
-                NewHoTenBox.IsReadOnly = true;
+                //NewHoTenBox.IsReadOnly = true;
 
                 NewPhaiBox.Text = _Phai;
-                NewPhaiBox.IsReadOnly = true;
+                //NewPhaiBox.IsReadOnly = true;
 
-                NewNgaySinhBox.Text = _NgaySinh.ToString("dd/MM/yyyy");
-                NewNgaySinhBox.IsReadOnly = true;
-
-                NewNgaySinhBox.Text = _NgaySinh.ToString("dd/MM/yyyy");
-                NewNgaySinhBox.IsReadOnly = true;
+                NewNgaySinhBox.Text = _NgaySinh.ToString("yyyy-MM-dd");
+                //NewNgaySinhBox.IsReadOnly = true;
 
                 NewPhuCapBox.Text = _PhuCap.ToString();
                 //NewPhuCapBox.IsReadOnly = true;
 
                 NewDTBox.Text = _DT;
-                NewDTBox.IsReadOnly = true;
+                //NewDTBox.IsReadOnly = true;
 
                 NewVaiTroBox.Text = _VaiTro;
                 NewVaiTroBox.IsReadOnly = true;
 
                 NewDonViBox.Text = _DonVi;
+                NewDonViBox.IsReadOnly = true;
+
+                NewCoSoBox.Text = _CoSo;
                 //NewDonViBox.IsReadOnly = true;
 
             }
             else if (_mode == "Add")
+            {
                 ConfirmButton.Content = _mode;
+                NewMaNSComboBox.ItemsSource = _MaNSList;
+                NewMaNSBox.Visibility = Visibility.Collapsed;
+                NewMaNSComboBox.Visibility = Visibility.Visible;
+
+            }
 
             await Task.Run(() => Thread.Sleep(25));
             loadingProgressBar.Value = 80;
@@ -156,6 +164,58 @@ namespace AdminMonitor.TRUONGDONVI
             }
         }
 
+        private void NewNgaySinhBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                _newNgaySinh = DateTime.Parse(NewNgaySinhBox.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private void NewHoTenBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                _newHoten = NewHoTenBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private void NewPhaiBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                _newPhai = NewPhaiBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private void NewVaiTroBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                _newVaiTro = NewVaiTroBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
 
         private void NewDonViBox_TextChanged(object sender, EventArgs e)
         {
@@ -170,13 +230,22 @@ namespace AdminMonitor.TRUONGDONVI
                 return;
             }
         }
+        private void NewCoSoBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+
+                _newCoSo = NewCoSoBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Input Wrong format", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
         private void NewMaNSComboBox_SelectionChanged(object sender, EventArgs e)
         {
             _newMaNV = (string)NewMaNSComboBox.SelectedItem;
-        }
-        private void NewMaCSComboBox_SelectionChanged(object sender, EventArgs e)
-        {
-            _newCoSo = (string)NewMaCSComboBox.SelectedItem;
         }
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
@@ -199,32 +268,33 @@ namespace AdminMonitor.TRUONGDONVI
                         {
                             _Conn.Open();
                         }
-                        if (_newPhuCap != _PhuCap || _newDonVi != _DonVi || _newCoSo != _CoSo)
-                        {
-                            OracleCommand query = _Conn.CreateCommand();
-                            query.BindByName = true;
-                            query.CommandText = """
-                                                    UPDATE admin.PROJECT_NHANSU
-                                                    SET PHUCAP = :newphucap, DONVI = :newdonvi, 
-                                                        COSO = :newcoso
-                                                    WHERE MANV = :manv
-                                                """;
-                            
-                            query.CommandType = CommandType.Text;
-                            query.Parameters.Add(new OracleParameter(":newphucap", _newPhuCap));
-                            query.Parameters.Add(new OracleParameter(":newdonvi", _newDonVi));
-                            query.Parameters.Add(new OracleParameter(":newcoso", _newCoSo));
-                            query.Parameters.Add(new OracleParameter(":manv", _MaNV));
+                        OracleCommand query = _Conn.CreateCommand();
+                        query.BindByName = true;
+                        query.CommandText = """
+                                                UPDATE admin.PROJECT_NHANSU
+                                                SET HOTEN = :newhoten, PHAI = :newphai,
+                                                    NGSINH = :newngaysinh, PHUCAP = :newphucap,
+                                                    DT = :newdt, COSO = :newcoso
+                                                WHERE MANV = :manv
+                                            """;
+                        
+                        query.CommandType = CommandType.Text;
+                        query.Parameters.Add(new OracleParameter(":newhoten", _newHoten));
+                        query.Parameters.Add(new OracleParameter(":newphai", _newPhai));
+                        query.Parameters.Add(new OracleParameter(":newngaysinh", _newNgaySinh));
+                        query.Parameters.Add(new OracleParameter(":newphucap", _newPhuCap));
+                        query.Parameters.Add(new OracleParameter(":newdt", _newDT));
+                        query.Parameters.Add(new OracleParameter(":newcoso", _newCoSo));
+                        query.Parameters.Add(new OracleParameter(":manv", _MaNV));
 
-                            try
-                            {
-                                query.ExecuteNonQuery();
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
-                                return;
-                            }
+                        try
+                        {
+                            query.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString(), "Failed!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
                         }
                     }
                     else if (_mode == "Add")
